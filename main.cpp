@@ -1,4 +1,7 @@
 #include <Novice.h>
+#include "Matrix4x4.h"
+#include "MyMath.h"
+#include "DrawUtils.h"
 
 const char kWindowTitle[] = "LE2A_06_オオハラアオイ";
 
