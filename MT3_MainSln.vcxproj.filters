@@ -59,6 +59,9 @@
     <ClCompile Include="renderUtils\DrawUtils.cpp">
       <Filter>renderUtils</Filter>
     </ClCompile>
+    <ClCompile Include="math\MyVector3.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -145,5 +148,8 @@
       <Filter>renderUtils</Filter>
     </ClInclude>
     <ClInclude Include="Environment.h" />
+    <ClInclude Include="math\MyVector3.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

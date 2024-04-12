@@ -1,12 +1,12 @@
 ﻿#include "MyMath.h"
 
-float Length(const Vector3& vec3){
+float Length(const Vec3f& vec3){
     return std::sqrt(vec3.x * vec3.x + vec3.y * vec3.y + vec3.z * vec3.z);
 }
 
 // 加算
-Vector3 Add(const Vector3& v1, const Vector3& v2) {
-	Vector3 result{};
+Vec3f Add(const Vec3f& v1, const Vec3f& v2) {
+	Vec3f result{};
 
 	result.x = v1.x + v2.x;
 	result.y = v1.y + v2.y;
@@ -16,8 +16,8 @@ Vector3 Add(const Vector3& v1, const Vector3& v2) {
 }
 
 // 減算
-Vector3  Subtract(const Vector3& v1, const Vector3& v2) {
-	Vector3 result{};
+Vec3f  Subtract(const Vec3f& v1, const Vec3f& v2) {
+	Vec3f result{};
 
 	result.x = v1.x - v2.x;
 	result.y = v1.y - v2.y;
@@ -27,8 +27,8 @@ Vector3  Subtract(const Vector3& v1, const Vector3& v2) {
 }
 
 // スカラー倍
-Vector3 Multiply(float scalar, const Vector3& v) {
-	Vector3 result{};
+Vec3f Multiply(float scalar, const Vec3f& v) {
+	Vec3f result{};
 
 	result.x = v.x * scalar;
 	result.y = v.y * scalar;
@@ -38,7 +38,7 @@ Vector3 Multiply(float scalar, const Vector3& v) {
 }
 
 // 内積
-float Dot(const Vector3& v1, const Vector3& v2) {
+float Dot(const Vec3f& v1, const Vec3f& v2) {
 	float result{};
 
 	result = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
@@ -46,8 +46,8 @@ float Dot(const Vector3& v1, const Vector3& v2) {
 	return result;
 }
 
-Vector3 Normalize(const Vector3& vec3){
-    Vector3 result = vec3;
+Vec3f Normalize(const Vec3f& vec3){
+    Vec3f result = vec3;
 
     float len = Length(vec3);
     if (len != 0) {

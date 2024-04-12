@@ -1,6 +1,6 @@
 #pragma once
 #include "MyMatrix4x4.h"
-#include "Vector3.h"
+#include "MyVector3.h"
 
 #include "Environment.h"
 #include "ImGuiManager.h"
@@ -9,8 +9,8 @@ class Camera{
 
 private:
 
-	Vector3 pos_;
-	Vector3 rotate_;
+	Vec3f pos_;
+	Vec3f rotate_;
 
 	Matrix4x4 cameraMatrix_;
 

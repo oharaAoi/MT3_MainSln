@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <Novice.h>
 #include <Matrix4x4.h>
-#include <Vector3.h>
+#include <MyVector3.h>
 #include <assert.h>
 #include <cmath>
 
@@ -62,14 +62,14 @@ Matrix4x4 MakeIdentity4x4();
 /// </summary>
 /// <param name="translate"></param>
 /// <returns></returns>
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
+Matrix4x4 MakeTranslateMatrix(const Vec3f& translate);
 
 /// <summary>
 /// 拡縮行列
 /// </summary>
 /// <param name="scale"></param>
 /// <returns></returns>
-Matrix4x4 MakeScaleMatrix(const Vector3& scale);
+Matrix4x4 MakeScaleMatrix(const Vec3f& scale);
 
 /// <summary>
 /// 回転行列
@@ -79,7 +79,7 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale);
 Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);
 Matrix4x4 MakeRotateZMatrix(float radian);
-Matrix4x4 MakeRotateXYZMatrix(Vector3 radian);
+Matrix4x4 MakeRotateXYZMatrix(Vec3f radian);
 
 /// <summary>
 /// 三次元アフィン変換行列
@@ -88,7 +88,7 @@ Matrix4x4 MakeRotateXYZMatrix(Vector3 radian);
 /// <param name="rotate"></param>
 /// <param name="translate"></param>
 /// <returns></returns>
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+Matrix4x4 MakeAffineMatrix(const Vec3f& scale, const Vec3f& rotate, const Vec3f& translate);
 
 /// <summary>
 /// 座標変換
@@ -96,7 +96,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 /// <param name="vector"></param>
 /// <param name="matrix"></param>
 /// <returns></returns>
-Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
+Vec3f Transform(const Vec3f& vector, const Matrix4x4& matrix);
 
 /// <summary>
 /// 正射影行列

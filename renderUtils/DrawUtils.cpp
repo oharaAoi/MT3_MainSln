@@ -8,8 +8,8 @@ void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix
 	for (uint32_t xIndex = 0; xIndex <= kSubdivision_; ++xIndex) {
 		float half = float(kSubdivision_) / kGridHalfwidth_;
 
-		Vector3 stPos = { -1 , 0, float((xIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) };
-		Vector3 endPos = { 1 , 0, float((xIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) };
+		Vec3f stPos = { -1 , 0, float((xIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) };
+		Vec3f endPos = { 1 , 0, float((xIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) };
 
 		Matrix4x4 stWorldMatrix = MakeAffineMatrix({ 1,1,1 }, { 0,0,0 }, stPos);
 		Matrix4x4 endWorldMatrix = MakeAffineMatrix({ 1,1,1 }, { 0,0,0 }, endPos);
@@ -17,11 +17,11 @@ void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix
 		Matrix4x4 stWvpMatrix = Multiply(stWorldMatrix, viewPrijectionMatrix);
 		Matrix4x4 endWvpMatrix = Multiply(endWorldMatrix, viewPrijectionMatrix);
 
-		Vector3 ndcSt = Transform(stPos, stWvpMatrix);
-		Vector3 ndcEnd = Transform(endPos, endWvpMatrix);
+		Vec3f ndcSt = Transform(stPos, stWvpMatrix);
+		Vec3f ndcEnd = Transform(endPos, endWvpMatrix);
 
-		Vector3 screenSt = Transform(ndcSt, viewMatrix);
-		Vector3 screenEnd = Transform(ndcEnd, viewMatrix);
+		Vec3f screenSt = Transform(ndcSt, viewMatrix);
+		Vec3f screenEnd = Transform(ndcEnd, viewMatrix);
 
 		if (xIndex == 5) {
 			Novice::DrawLine(
@@ -45,8 +45,8 @@ void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix
 	for (uint32_t zIndex = 0; zIndex <= kSubdivision_; ++zIndex) {
 		float half = float(kSubdivision_) / kGridHalfwidth_;
 
-		Vector3 stPos = { float((zIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) , 0,1 };
-		Vector3 endPos = { float((zIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) , 0, -1 };
+		Vec3f stPos = { float((zIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) , 0,1 };
+		Vec3f endPos = { float((zIndex)-half) * kGridEvery_ / (float(kGridHalfwidth_)) , 0, -1 };
 
 		Matrix4x4 stWorldMatrix = MakeAffineMatrix({ 1,1,1 }, { 0,0,0 }, stPos);
 		Matrix4x4 endWorldMatrix = MakeAffineMatrix({ 1,1,1 }, { 0,0,0 }, endPos);
@@ -54,11 +54,11 @@ void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix
 		Matrix4x4 stWvpMatrix = Multiply(stWorldMatrix, viewPrijectionMatrix);
 		Matrix4x4 endWvpMatrix = Multiply(endWorldMatrix, viewPrijectionMatrix);
 
-		Vector3 ndcSt = Transform(stPos, stWvpMatrix);
-		Vector3 ndcEnd = Transform(endPos, endWvpMatrix);
+		Vec3f ndcSt = Transform(stPos, stWvpMatrix);
+		Vec3f ndcEnd = Transform(endPos, endWvpMatrix);
 
-		Vector3 screenSt = Transform(ndcSt, viewMatrix);
-		Vector3 screenEnd = Transform(ndcEnd, viewMatrix);
+		Vec3f screenSt = Transform(ndcSt, viewMatrix);
+		Vec3f screenEnd = Transform(ndcEnd, viewMatrix);
 
 		if (zIndex == 5) {
 			Novice::DrawLine(
@@ -92,36 +92,43 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
 			float lon = lonIndex * kLonEvery; // 現在の経度 fai
 
-			Vector3 a, b, c;
-			a = { std::cos(lat) * cos(lon) * (sphere.radius / 2),
+			Vec3f a, b, c;
+			Vec3f localA{}, localB{}, localC{};
+			localA = {
+				std::cos(lat) * cos(lon) * (sphere.radius / 2),
 				std::sin(lat) * (sphere.radius / 2),
-				std::cos(lat) * std::sin(lon) * (sphere.radius / 2) };
+				std::cos(lat) * std::sin(lon) * (sphere.radius / 2)
+			};
 
-			b = { std::cos(lat + kLatEvery) * std::cos(lon) * (sphere.radius / 2) ,
+			localB = {
+				std::cos(lat + kLatEvery) * std::cos(lon) * (sphere.radius / 2) ,
 				std::sin(lat + kLatEvery) * (sphere.radius / 2),
-				std::cos(lat + kLatEvery) * std::sin(lon) * (sphere.radius / 2) };
+				std::cos(lat + kLatEvery) * std::sin(lon) * (sphere.radius / 2)
+			};
 
-			c = { std::cos(lat) * std::cos(lon + kLonEvery) * (sphere.radius / 2),
+			localC = {
+				std::cos(lat) * std::cos(lon + kLonEvery) * (sphere.radius / 2),
 				std::sin(lat) * (sphere.radius / 2),
-				std::cos(lat) * std::sin(lon + kLonEvery) * (sphere.radius / 2) };
+				std::cos(lat) * std::sin(lon + kLonEvery) * (sphere.radius / 2)
+			};
 
 
 			a = {
-				a.x + sphere.center.x,
-				a.y + sphere.center.y,
-				a.z + sphere.center.z,
+				localA.x + sphere.center.x,
+				localA.y + sphere.center.y,
+				localA.z + sphere.center.z,
 			};
 
 			b = {
-				b.x + sphere.center.x,
-				b.y + sphere.center.y,
-				b.z + sphere.center.z,
+				localB.x + sphere.center.x,
+				localB.y + sphere.center.y,
+				localB.z + sphere.center.z,
 			};
 
 			c = {
-				c.x + sphere.center.x,
-				c.y + sphere.center.y,
-				c.z + sphere.center.z,
+				localC.x + sphere.center.x,
+				localC.y + sphere.center.y,
+				localC.z + sphere.center.z,
 			};
 
 			Matrix4x4 aWorldMatrix = MakeAffineMatrix({ 1,1,1 }, { 0,0,0 }, a);
@@ -132,13 +139,13 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 			Matrix4x4 bWvpMatrix = Multiply(bWorldMatrix, viewProjectionMatrix);
 			Matrix4x4 cWvpMatrix = Multiply(cWorldMatrix, viewProjectionMatrix);
 
-			Vector3 ndcA = Transform(a, aWvpMatrix);
-			Vector3 ndcB = Transform(b, bWvpMatrix);
-			Vector3 ndcC = Transform(c, cWvpMatrix);
+			Vec3f ndcA = Transform(localA, aWvpMatrix);
+			Vec3f ndcB = Transform(localB, bWvpMatrix);
+			Vec3f ndcC = Transform(localC, cWvpMatrix);
 
-			Vector3 screenA = Transform(ndcA, viewportMatrix);
-			Vector3 screenB = Transform(ndcB, viewportMatrix);
-			Vector3 screenC = Transform(ndcC, viewportMatrix);
+			Vec3f screenA = Transform(ndcA, viewportMatrix);
+			Vec3f screenB = Transform(ndcB, viewportMatrix);
+			Vec3f screenC = Transform(ndcC, viewportMatrix);
 
 			if (lonIndex >= kSubdivision / 2) {
 				Novice::DrawLine(
@@ -178,7 +185,7 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 }
 
 // 表示
-void VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label) {
+void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kColWidth, y, "%.02f", vector.y);
 	Novice::ScreenPrintf(x + kColWidth * 2, y, "%.02f", vector.z);

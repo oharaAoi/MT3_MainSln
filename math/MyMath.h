@@ -1,20 +1,20 @@
 #pragma once
 #include "Vector2.h"
-#include "Vector3.h"
+#include "MyVector3.h"
 #include "Vector4.h"
 
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-Vector3 Add(const Vector3& v1, const Vector3& v2);
+Vec3f Add(const Vec3f& v1, const Vec3f& v2);
 
-Vector3  Subtract(const Vector3& v1, const Vector3& v2);
+Vec3f  Subtract(const Vec3f& v1, const Vec3f& v2);
 
-Vector3 Multiply(float scalar, const Vector3& v);
+Vec3f Multiply(float scalar, const Vec3f& v);
 
-float Dot(const Vector3& v1, const Vector3& v2);
+float Dot(const Vec3f& v1, const Vec3f& v2);
 
-float Length(const Vector3& vec3);
+float Length(const Vec3f& vec3);
 
-Vector3 Normalize(const Vector3& vec3);
+Vec3f Normalize(const Vec3f& vec3);

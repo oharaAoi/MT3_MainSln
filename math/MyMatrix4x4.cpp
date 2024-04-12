@@ -173,7 +173,7 @@ Matrix4x4 MakeIdentity4x4(){
 /// </summary>
 /// <param name="translate"></param>
 /// <returns></returns>
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
+Matrix4x4 MakeTranslateMatrix(const Vec3f& translate){
     Matrix4x4 result{};
    
     result.m[0][0] = 1;
@@ -192,7 +192,7 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate){
 /// </summary>
 /// <param name="scale"></param>
 /// <returns></returns>
-Matrix4x4 MakeScaleMatrix(const Vector3& scale){
+Matrix4x4 MakeScaleMatrix(const Vec3f& scale){
     Matrix4x4 result{};
 
     result.m[0][0] = scale.x;
@@ -244,7 +244,7 @@ Matrix4x4 MakeRotateYMatrix(float radian){
     return result;
 }
 
-Matrix4x4 MakeRotateXYZMatrix(Vector3 radian) {
+Matrix4x4 MakeRotateXYZMatrix(Vec3f radian) {
     Matrix4x4 result{};
 
     result = Multiply(MakeRotateXMatrix(radian.x), Multiply(MakeRotateYMatrix(radian.y), MakeRotateZMatrix(radian.z)));
@@ -260,7 +260,7 @@ Matrix4x4 MakeRotateXYZMatrix(Vector3 radian) {
 /// <param name="rotate"></param>
 /// <param name="translate"></param>
 /// <returns></returns>
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate){
+Matrix4x4 MakeAffineMatrix(const Vec3f& scale, const Vec3f& rotate, const Vec3f& translate){
     Matrix4x4 scaleMatrix{};
     Matrix4x4 rotateMatrix{};
     Matrix4x4 translateMatrix{};
@@ -281,8 +281,8 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 /// <param name="vector"></param>
 /// <param name="matrix"></param>
 /// <returns></returns>
-Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
-    Vector3 result;
+Vec3f Transform(const Vec3f& vector, const Matrix4x4& matrix) {
+    Vec3f result;
     result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
     result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
     result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
