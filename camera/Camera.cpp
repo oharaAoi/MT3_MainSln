@@ -4,8 +4,8 @@ Camera::Camera() { Init(); }
 
 void Camera::Init(){
 
-	pos_ = { 0.0f, 1.9f, -6.49f };
-	rotate_ = { 0.26f, 0.0f, 0.0f };
+	pos_ = { 640.0f, 360.9f, 0.0f };
+	rotate_ = { 0.0f, 0.0f, 0.0f };
 
 	cameraMatrix_ = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, rotate_, pos_);
 

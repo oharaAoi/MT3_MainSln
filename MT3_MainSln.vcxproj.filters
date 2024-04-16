@@ -62,6 +62,9 @@
     <ClCompile Include="math\MyVector3.cpp">
       <Filter>math</Filter>
     </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -151,5 +154,6 @@
     <ClInclude Include="math\MyVector3.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
 </Project>

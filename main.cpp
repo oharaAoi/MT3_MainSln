@@ -1,7 +1,11 @@
 #include <Novice.h>
+#include <memory>
 #include "Matrix4x4.h"
 #include "MyMath.h"
 #include "DrawUtils.h"
+#include "Triangle.h"
+#include "Camera.h"
+#include "Environment.h"
 
 const char kWindowTitle[] = "LE2A_06_オオハラアオイ";
 
@@ -17,6 +21,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
+	std::unique_ptr<Triangle> triangle_ = std::make_unique<Triangle>();
+	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
+
+	Vec3f v1{ 1.2f, -3.9f, 2.5f };
+	Vec3f v2{ 2.8f, 0.4f, -1.3f };
+
+	Vec3f cross = Cross(v1, v2);
+
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -31,7 +44,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///------------------///
 
 
+		triangle_->Update();
+		camera_->Update();
 
+		triangle_->MakeWorldViewProjectionMatrix(camera_->GetViewMatrix(), camera_->GetProjectionMatrix());
+		triangle_->MakeSceenVertex(camera_->GetViewportMatrix());
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -41,8 +58,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///------------------///
 
+		triangle_->Draw();
+		camera_->Draw();
 
-
+		VectorScreenPrintf(0, 0, cross, "Cross");
 
 		///------------------///
 		/// ↑描画処理ここまで
