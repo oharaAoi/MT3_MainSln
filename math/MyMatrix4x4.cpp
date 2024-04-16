@@ -327,11 +327,11 @@ Matrix4x4 MakeOrthograhicMatrix(float left, float top, float right, float bottom
 /// <param name="nearClip"></param>
 /// <param name="farClip"></param>
 /// <returns></returns>
-Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip){
+Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
     Matrix4x4 result{};
 
     float tangent = fovY / 2.0f;
-    float cotangent = 1.0f / atanf(tangent);
+    float cotangent = 1.0f / std::tanf(tangent);
 
     result.m[0][0] = (1.0f / aspectRatio) * cotangent;
     result.m[1][1] = cotangent;
