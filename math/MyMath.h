@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Vector2.h"
 #include "MyVector3.h"
 #include "Vector4.h"
@@ -8,37 +8,37 @@
 #include <math.h>
 
 //=================================================================================================================
-//	«	\‘¢‘Ì
+//	â†“	æ§‹é€ ä½“
 //=================================================================================================================
 /// <summary>
-/// ’¼ü
+/// ç›´ç·š
 /// </summary>
 struct Line {
-	Vec3f origin;	// n“_
-	Vec3f diff;	// I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vec3f origin;	// å§‹ç‚¹
+	Vec3f diff;	// çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };
 
 /// <summary>
-/// ”¼’¼ü
+/// åŠç›´ç·š
 /// </summary>
 struct Ray {
-	Vec3f origin;	// n“_
-	Vec3f diff;	// I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vec3f origin;	// å§‹ç‚¹
+	Vec3f diff;	// çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };
 
 /// <summary>
-/// ü•ª
+/// ç·šåˆ†
 /// </summary>
 struct Segment {
-	Vec3f origin;	// n“_
-	Vec3f diff;	// I“_‚Ö‚Ì·•ªƒxƒNƒgƒ‹
+	Vec3f origin;	// å§‹ç‚¹
+	Vec3f diff;	// çµ‚ç‚¹ã¸ã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 };
 
 //=================================================================================================================
-//	«@l‘¥‰‰Z
+//	â†“ã€€å››å‰‡æ¼”ç®—
 //=================================================================================================================
 /// <summary>
-/// ‰ÁZ
+/// åŠ ç®—
 /// </summary>
 /// <param name="v1"></param>
 /// <param name="v2"></param>
@@ -46,7 +46,7 @@ struct Segment {
 Vec3f Add(const Vec3f& v1, const Vec3f& v2);
 
 /// <summary>
-/// Œ¸Z
+/// æ¸›ç®—
 /// </summary>
 /// <param name="v1"></param>
 /// <param name="v2"></param>
@@ -54,7 +54,7 @@ Vec3f Add(const Vec3f& v1, const Vec3f& v2);
 Vec3f  Subtract(const Vec3f& v1, const Vec3f& v2);
 
 /// <summary>
-/// Š|‚¯Z
+/// æ›ã‘ç®—
 /// </summary>
 /// <param name="scalar"></param>
 /// <param name="v"></param>
@@ -62,10 +62,10 @@ Vec3f  Subtract(const Vec3f& v1, const Vec3f& v2);
 Vec3f Multiply(float scalar, const Vec3f& v);
 
 //=================================================================================================================
-//	«	ƒxƒNƒgƒ‹‚Ì“àÏŠOÏ
+//	â†“	ãƒ™ã‚¯ãƒˆãƒ«ã®å†…ç©å¤–ç©
 //=================================================================================================================
 /// <summary>
-/// “àÏ
+/// å†…ç©
 /// </summary>
 /// <param name="v1"></param>
 /// <param name="v2"></param>
@@ -73,7 +73,7 @@ Vec3f Multiply(float scalar, const Vec3f& v);
 float Dot(const Vec3f& v1, const Vec3f& v2);
 
 /// <summary>
-/// ƒNƒƒXÏ
+/// ã‚¯ãƒ­ã‚¹ç©
 /// </summary>
 /// <param name="v1"></param>
 /// <param name="v2"></param>
@@ -81,24 +81,24 @@ float Dot(const Vec3f& v1, const Vec3f& v2);
 Vec3f Cross(const Vec3f& v1, const Vec3f& v2);
 
 //=================================================================================================================
-//	«	ƒxƒNƒgƒ‹‚Ì’·‚³‚ÉŠÖ‚·‚éŠÖ”
+//	â†“	ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã«é–¢ã™ã‚‹é–¢æ•°
 //=================================================================================================================
 /// <summary>
-/// ƒmƒ‹ƒ€
+/// ãƒãƒ«ãƒ 
 /// </summary>
 /// <param name="vec3"></param>
 /// <returns></returns>
 float Length(const Vec3f& vec3);
 
 /// <summary>
-/// ³‹K‰»
+/// æ­£è¦åŒ–
 /// </summary>
 /// <param name="vec3"></param>
 /// <returns></returns>
 Vec3f Normalize(const Vec3f& vec3);
 
 /// <summary>
-/// ³Ë‰eƒxƒNƒgƒ‹
+/// æ­£å°„å½±ãƒ™ã‚¯ãƒˆãƒ«
 /// </summary>
 /// <param name="v1"></param>
 /// <param name="v2"></param>
@@ -106,9 +106,9 @@ Vec3f Normalize(const Vec3f& vec3);
 Vec3f Project(const Vec3f& v1, const Vec3f& v2);
 
 /// <summary>
-/// Å‹ßÚ“_‚ğ‹‚ß‚éŠÖ”
+/// æœ€è¿‘æ¥ç‚¹ã‚’æ±‚ã‚ã‚‹é–¢æ•°
 /// </summary>
-/// <param name="point">“_P(‚±‚±‚©‚çü•ª‚Ö‚ÌƒxƒNƒgƒ‹‚ğƒxƒNƒgƒ‹Ë‰e‚·‚é)</param>
+/// <param name="point">ç‚¹P(ã“ã“ã‹ã‚‰ç·šåˆ†ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ãƒ™ã‚¯ãƒˆãƒ«å°„å½±ã™ã‚‹)</param>
 /// <param name="segment"></param>
 /// <returns></returns>
 Vec3f ClosestPoint(const Vec3f& point, const Segment& segment);

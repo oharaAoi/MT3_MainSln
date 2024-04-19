@@ -2,6 +2,8 @@
 #include "Matrix4x4.h"
 #include "MyMath.h"
 #include "DrawUtils.h"
+#include "Camera.h"
+#include <memory>
 
 const char kWindowTitle[] = "LE2A_06_オオハラアオイ";
 
@@ -17,6 +19,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
+	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
+
+	Sphere sphere{};
+	sphere.center = { 0.0f, 0.0f, 0.0f };
+	sphere.radius = 0.5f;
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -31,7 +39,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///------------------///
 
 
-
+		camera_->Update();
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -41,7 +49,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///------------------///
 
+		camera_->Draw();
 
+		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+
+		DrawSphere(sphere, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
+
+		ImGui::Begin("sphere");
+
+		ImGui::DragFloat3("sphereCenter", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("sphereRadius", &sphere.radius, 0.01f);
+
+		ImGui::End();
 
 
 		///------------------///

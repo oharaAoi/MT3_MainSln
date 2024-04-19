@@ -147,39 +147,22 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 			Vec3f screenB = Transform(ndcB, viewportMatrix);
 			Vec3f screenC = Transform(ndcC, viewportMatrix);
 
-			if (lonIndex >= kSubdivision / 2) {
-				Novice::DrawLine(
-					static_cast<int>(screenA.x),
-					static_cast<int>(screenA.y),
-					static_cast<int>(screenB.x),
-					static_cast<int>(screenB.y),
-					color
-				);
 
-				Novice::DrawLine(
-					static_cast<int>(screenA.x),
-					static_cast<int>(screenA.y),
-					static_cast<int>(screenC.x),
-					static_cast<int>(screenC.y),
-					color
-				);
-			} else {
-				Novice::DrawLine(
-					static_cast<int>(screenA.x),
-					static_cast<int>(screenA.y),
-					static_cast<int>(screenB.x),
-					static_cast<int>(screenB.y),
-					0xffffffff
-				);
+			Novice::DrawLine(
+				static_cast<int>(screenA.x),
+				static_cast<int>(screenA.y),
+				static_cast<int>(screenB.x),
+				static_cast<int>(screenB.y),
+				color
+			);
 
-				Novice::DrawLine(
-					static_cast<int>(screenA.x),
-					static_cast<int>(screenA.y),
-					static_cast<int>(screenC.x),
-					static_cast<int>(screenC.y),
-					0xffffffff
-				);
-			}
+			Novice::DrawLine(
+				static_cast<int>(screenA.x),
+				static_cast<int>(screenA.y),
+				static_cast<int>(screenC.x),
+				static_cast<int>(screenC.y),
+				color
+			);
 		}
 	}
 }
