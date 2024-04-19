@@ -16,8 +16,24 @@ void Triangle::Init(){
 	screenVertex_[2] = kLocalVertex_[2];
 }
 
-void Triangle::Update(){
+void Triangle::Update(char* keys){
 	rotate_.y += float(M_PI) / 180.0f;
+
+	if (keys[DIK_A]) {
+		translate_.x -= 1.0f;
+	}
+
+	if (keys[DIK_D]) {
+		translate_.x += 1.0f;
+	}
+
+	if (keys[DIK_W]) {
+		translate_.z += 1.0f;
+	}
+
+	if (keys[DIK_S]) {
+		translate_.z -= 1.0f;
+	}
 
 	worldMatrix_ = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, rotate_, translate_);
 }

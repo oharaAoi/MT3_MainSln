@@ -1,4 +1,5 @@
 #pragma once
+#include <Novice.h>
 #include <MyVector3.h>
 #include "MyMatrix4x4.h"
 #define _USE_MATH_DEFINES
@@ -24,7 +25,7 @@ public:
 	Triangle();
 
 	void Init();
-	void Update();
+	void Update(char* keys);
 	void Draw();
 
 	void MakeWorldViewProjectionMatrix(const Matrix4x4& viewMatrix, const Matrix4x4& projectionMatrix);
