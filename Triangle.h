@@ -36,5 +36,7 @@ public:
 	void MakeWorldViewProjectionMatrix(const Matrix4x4& viewMatrix, const Matrix4x4& projectionMatrix);
 	void MakeSceenVertex(const Matrix4x4& viewportMatrix);
 
+	void CrossToCamera(const Vec3f& cameraDire);
+
 };
 

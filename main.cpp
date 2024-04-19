@@ -50,6 +50,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		triangle_->MakeWorldViewProjectionMatrix(camera_->GetViewMatrix(), camera_->GetProjectionMatrix());
 		triangle_->MakeSceenVertex(camera_->GetViewportMatrix());
 
+		triangle_->CrossToCamera(camera_->GetDirection());
+
 		///------------------///
 		/// ↑更新処理ここまで
 		///------------------///

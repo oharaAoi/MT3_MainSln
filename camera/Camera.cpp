@@ -33,6 +33,7 @@ void Camera::Update(){
 	viewportMatrix_ = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
 	cameraRotateMat = MakeRotateXYZMatrix(rotate_);
+	dire_ = { cameraRotateMat.m[2][0],cameraRotateMat.m[2][1],cameraRotateMat.m[2][2] };
 }
 
 void Camera::Draw(){

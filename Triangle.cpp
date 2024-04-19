@@ -23,12 +23,6 @@ void Triangle::Update(){
 
 void Triangle::Draw(){
 
-	Vec3f a = screenVertex_[2] - screenVertex_[0];
-	Vec3f b = screenVertex_[1] - screenVertex_[2];
-	cross_ = Cross(a, b);
-
-	dot_ = Dot({ 0.0f, 0.0f,-1.0f }, cross_);
-
 	if (dot_ < 0) {
 		Novice::DrawTriangle(
 			static_cast<int>(screenVertex_[0].x),
@@ -62,4 +56,12 @@ void Triangle::MakeSceenVertex(const Matrix4x4& viewportMatrix){
 		ndcVertex_[i] = Transform(kLocalVertex_[i], worldViewProjectionMatrix_);
 		screenVertex_[i] = Transform(ndcVertex_[i], viewportMatrix);
 	}
+}
+
+void Triangle::CrossToCamera(const Vec3f& cameraDire) {
+	Vec3f a = screenVertex_[2] - screenVertex_[0];
+	Vec3f b = screenVertex_[1] - screenVertex_[2];
+	cross_ = Cross(b, a);
+
+	dot_ = Dot(cameraDire, cross_);
 }

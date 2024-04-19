@@ -39,5 +39,6 @@ public:
 	Matrix4x4 GetViewportMatrix() const { return viewportMatrix_; }
 	Matrix4x4 GetViewProjectMatrix() const { return viewProjectMatrix_; }
 
+	Vec3f GetDirection() const { return dire_; }
 };
 
