@@ -2,6 +2,8 @@
 #include "Matrix4x4.h"
 #include "MyMath.h"
 #include "DrawUtils.h"
+#include "Camera.h"
+#include <memory>
 
 const char kWindowTitle[] = "LE2A_06_オオハラアオイ";
 
@@ -17,6 +19,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
+	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -30,7 +34,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///------------------///
 
-
+		camera_->Update();
 
 
 		///------------------///
@@ -41,7 +45,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///------------------///
 
-
+		camera_->Draw();
 
 
 		///------------------///
