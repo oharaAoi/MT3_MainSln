@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		triangle_->Draw();
 		camera_->Draw();
 
-		VectorScreenPrintf(0, 0, cross, "Cross");
+		//VectorScreenPrintf(0, 0, cross, "Cross");
 
 		///------------------///
 		/// ↑描画処理ここまで

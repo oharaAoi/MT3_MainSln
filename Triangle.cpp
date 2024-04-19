@@ -23,6 +23,13 @@ void Triangle::Update(){
 }
 
 void Triangle::Draw(){
+
+	Vec3f a = screenVertex_[2] - screenVertex_[0];
+	Vec3f b = screenVertex_[1] - screenVertex_[2];
+	cross_ = Cross(a, b);
+
+	dot_ = Dot({ 0.0f, 0.0f,1.0f }, cross_);
+
 	Novice::DrawTriangle(
 		static_cast<int>(screenVertex_[0].x),
 		static_cast<int>(screenVertex_[0].y),
@@ -34,10 +41,14 @@ void Triangle::Draw(){
 		kFillModeSolid
 	);
 
+	VectorScreenPrintf(0, 0, cross_, "Cross");
+
 	ImGui::Begin("tirangle");
 
 	ImGui::SliderFloat3("rotate_", &rotate_.x, 0.0f, 1280.0f);
 	ImGui::SliderFloat3("translate", &translate_.x, 0.0f, 1280.0f);
+	ImGui::Text("dot:%d", dot_);
+
 
 	ImGui::End();
 }
