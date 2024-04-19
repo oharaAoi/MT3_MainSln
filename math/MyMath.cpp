@@ -113,3 +113,38 @@ Vec3f Normalize(const Vec3f& vec3){
 
     return result;
 }
+
+
+/// <summary>
+/// 正射影ベクトル
+/// </summary>
+/// <param name="v1"></param>
+/// <param name="v2"></param>
+/// <returns></returns>
+Vec3f Project(const Vec3f& v1, const Vec3f& v2) {
+	Vec3f result{};
+	float middle{};
+	Vec3f unitVector = Normalize(v2);
+
+	middle = Dot(v1, unitVector);
+
+	result = unitVector * middle;
+
+	return result;
+}
+
+/// <summary>
+/// 最近接点を求める関数
+/// </summary>
+/// <param name="point">点P(ここから線分へのベクトルをベクトル射影する)</param>
+/// <param name="segment"></param>
+/// <returns></returns>
+Vec3f ClosestPoint(const Vec3f& point, const Segment& segment) {
+	Vec3f result{};
+	// 正射影ベクトルを求める
+	Vec3f projVector = Project(Subtract(point, segment.origin), segment.diff);
+	// 最近接点を求める
+	result = segment.origin + projVector;
+
+	return result;
+}
