@@ -16,6 +16,7 @@ private:
 
 	Vec3f kLocalVertex_[3];
 	Vec3f screenVertex_[3];
+	Vec3f ndcVertex_[3];
 
 	Vec3f cross_;
 	float dot_;
