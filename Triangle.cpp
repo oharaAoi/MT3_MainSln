@@ -6,7 +6,6 @@ void Triangle::Init(){
 	rotate_ = {0.0f, 0.0f, 0.0f};
 	translate_ = {640.0f, 360.0f, 100.0f};
 
-	
 	kLocalVertex_[0] = { 0, 10.0f, 0.0f};
 	kLocalVertex_[1] = { -10, -10.0f, 0.0f };
 	kLocalVertex_[2] = { 10, -10.0f, 0.0f };
@@ -24,22 +23,24 @@ void Triangle::Update(){
 
 void Triangle::Draw(){
 
-	Vec3f a = ndcVertex_[2] - ndcVertex_[0];
-	Vec3f b = ndcVertex_[1] - ndcVertex_[2];
+	Vec3f a = screenVertex_[2] - screenVertex_[0];
+	Vec3f b = screenVertex_[1] - screenVertex_[2];
 	cross_ = Cross(a, b);
 
-	dot_ = Dot({ 0.0f, 0.0f,1.0f }, cross_);
+	dot_ = Dot({ 0.0f, 0.0f,-1.0f }, cross_);
 
-	Novice::DrawTriangle(
-		static_cast<int>(screenVertex_[0].x),
-		static_cast<int>(screenVertex_[0].y),
-		static_cast<int>(screenVertex_[1].x),
-		static_cast<int>(screenVertex_[1].y),
-		static_cast<int>(screenVertex_[2].x),
-		static_cast<int>(screenVertex_[2].y),
-		RED,
-		kFillModeSolid
-	);
+	if (dot_ < 0) {
+		Novice::DrawTriangle(
+			static_cast<int>(screenVertex_[0].x),
+			static_cast<int>(screenVertex_[0].y),
+			static_cast<int>(screenVertex_[1].x),
+			static_cast<int>(screenVertex_[1].y),
+			static_cast<int>(screenVertex_[2].x),
+			static_cast<int>(screenVertex_[2].y),
+			RED,
+			kFillModeSolid
+		);
+	}
 
 	VectorScreenPrintf(0, 0, cross_, "Cross");
 

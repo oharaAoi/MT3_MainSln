@@ -1,4 +1,4 @@
-#include "Camera.h"
+﻿#include "Camera.h"
 
 Camera::Camera() { Init(); }
 
@@ -9,12 +9,13 @@ void Camera::Init(){
 
 	cameraMatrix_ = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, rotate_, pos_);
 
+	// ビュー行列
 	viewMatrix_ = Inverse(cameraMatrix_);
-
+	// 透視投影行列
 	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
-
+	// 
 	viewProjectMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
-
+	// ビューポート変換行列
 	viewportMatrix_ = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
 }
@@ -30,6 +31,8 @@ void Camera::Update(){
 	viewProjectMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
 
 	viewportMatrix_ = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+
+	cameraRotateMat = MakeRotateXYZMatrix(rotate_);
 }
 
 void Camera::Draw(){

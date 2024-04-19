@@ -22,6 +22,10 @@ private:
 
 	Matrix4x4 viewportMatrix_;
 
+	Vec3f dire_;
+
+	Matrix4x4 cameraRotateMat;
+
 public:
 
 	Camera();
