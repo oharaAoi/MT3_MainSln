@@ -8,11 +8,12 @@
 struct Sphere {
 	Vec3f center;
 	float radius;
+	uint32_t color;
 };
 
 void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix);
 
-void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
+void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
 
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label);

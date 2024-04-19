@@ -81,7 +81,7 @@ void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix
 
 }
 
-void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color) {
+void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
 	const uint32_t kSubdivision = 16;
 	const float kLonEvery = 2.0f * float(M_PI) / kSubdivision;
 	const float kLatEvery = float(M_PI) / kSubdivision;
@@ -152,7 +152,7 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 				static_cast<int>(screenA.y),
 				static_cast<int>(screenB.x),
 				static_cast<int>(screenB.y),
-				color
+				sphere.color
 			);
 
 			Novice::DrawLine(
@@ -160,7 +160,7 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 				static_cast<int>(screenA.y),
 				static_cast<int>(screenC.x),
 				static_cast<int>(screenC.y),
-				color
+				sphere.color
 			);
 		}
 	}
