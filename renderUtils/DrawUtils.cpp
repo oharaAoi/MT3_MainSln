@@ -166,6 +166,53 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 	}
 }
 
+void DrawPlane(const Plane& plane, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color) {
+	// 中心点を決める
+	Vec3f center = plane.normal * plane.distance;
+	Vec3f perpendiculars[4];
+	// 法線と垂直なベクトルを求める
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal));
+	// 上の逆ベクトルを求める
+	perpendiculars[1] = { -perpendiculars[0].x, -perpendiculars[0].y, -perpendiculars[0].z };
+	// 垂直なベクトルと法線のクロス積を求める
+	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]);
+	// 上の逆ベクトルを求める
+	perpendiculars[3] = { -perpendiculars[2].x, -perpendiculars[2].y, -perpendiculars[2].z };
+	// 4つのベクトルを中心点にそれぞれ定数倍して足す
+	Vec3f points[4];
+	for (int32_t index = 0; index < 4; ++index) {
+		Vec3f extend = perpendiculars[index] * 2.0f;
+		Vec3f point = center + extend;
+		points[index] = Transform(Transform(point, viewProjection), viewportMatrix);
+	}
+
+	// 線を描画する
+	Novice::DrawLine(
+		static_cast<int>(points[0].x),
+		static_cast<int>(points[0].y),
+		static_cast<int>(points[2].x),
+		static_cast<int>(points[2].y),
+		color);
+	Novice::DrawLine(
+		static_cast<int>(points[1].x),
+		static_cast<int>(points[1].y),
+		static_cast<int>(points[2].x),
+		static_cast<int>(points[2].y),
+		0xff0000ff);
+	Novice::DrawLine(
+		static_cast<int>(points[1].x),
+		static_cast<int>(points[1].y),
+		static_cast<int>(points[3].x),
+		static_cast<int>(points[3].y),
+		0x00ff00ff);
+	Novice::DrawLine(
+		static_cast<int>(points[3].x),
+		static_cast<int>(points[3].y),
+		static_cast<int>(points[0].x),
+		static_cast<int>(points[0].y),
+		0x0000ffff);
+}
+
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);

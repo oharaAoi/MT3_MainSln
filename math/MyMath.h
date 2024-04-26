@@ -97,6 +97,9 @@ float Length(const Vec3f& vec3);
 /// <returns></returns>
 Vec3f Normalize(const Vec3f& vec3);
 
+//=================================================================================================================
+//	↓	ベクトルに関する関数
+//=================================================================================================================
 /// <summary>
 /// 正射影ベクトル
 /// </summary>
@@ -104,6 +107,13 @@ Vec3f Normalize(const Vec3f& vec3);
 /// <param name="v2"></param>
 /// <returns></returns>
 Vec3f Project(const Vec3f& v1, const Vec3f& v2);
+
+/// <summary>
+/// 垂直なベクトルを返す関数
+/// </summary>
+/// <param name="vector">法線</param>
+/// <returns>垂直ベクトル</returns>
+Vec3f Perpendicular(const Vec3f& vector);
 
 /// <summary>
 /// 最近接点を求める関数

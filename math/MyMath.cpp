@@ -134,6 +134,18 @@ Vec3f Project(const Vec3f& v1, const Vec3f& v2) {
 }
 
 /// <summary>
+/// 垂直なベクトルを返す関数
+/// </summary>
+/// <param name="vector">法線</param>
+/// <returns>垂直ベクトル</returns>
+Vec3f Perpendicular(const Vec3f& vector) {
+	if (vector.x != 0.0f || vector.y != 0.0f) {
+		return { -vector.y, vector.x, 0.0f };
+	}
+	return { 0.0f, -vector.z, vector.y };
+}
+
+/// <summary>
 /// 最近接点を求める関数
 /// </summary>
 /// <param name="point">点P(ここから線分へのベクトルをベクトル射影する)</param>
