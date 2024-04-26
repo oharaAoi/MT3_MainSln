@@ -47,7 +47,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-
+		// 当たり判定
 		if (IsCollision(sphere, plane)) {
 			sphere.color = 0xff0000ff;
 		} else {
