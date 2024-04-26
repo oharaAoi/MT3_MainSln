@@ -24,11 +24,9 @@ bool IsCollision(const Sphere& s1, const Sphere& s2) {
 /// <param name="p1">平面1</param>/// 
 /// <returns>true:当たっている　false:当たっていない</returns>
 bool IsCollision(const Sphere& s1, const Plane& p1) {
-    // 平面と球の中心点の距離を求める
-
     // 法線と球の中心点で平面方程式を行う
     float dot = Dot(p1.normal, s1.center);
-    
+    // 平面と球の中心点の距離を求める
     float distance = std::abs(dot - p1.distance);
 
     if (distance <= s1.radius) {
