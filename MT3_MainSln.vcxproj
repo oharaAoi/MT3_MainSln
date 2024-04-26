@@ -120,6 +120,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\MyMath.cpp" />
     <ClCompile Include="math\MyMatrix4x4.cpp" />
+    <ClCompile Include="math\MyVector2.cpp" />
     <ClCompile Include="math\MyVector3.cpp" />
     <ClCompile Include="renderUtils\DrawUtils.cpp" />
   </ItemGroup>
@@ -156,6 +157,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Environment.h" />
     <ClInclude Include="math\MyMath.h" />
     <ClInclude Include="math\MyMatrix4x4.h" />
+    <ClInclude Include="math\MyVector2.h" />
     <ClInclude Include="math\MyVector3.h" />
     <ClInclude Include="renderUtils\DrawUtils.h" />
   </ItemGroup>
