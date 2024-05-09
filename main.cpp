@@ -27,6 +27,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sphere.radius = 0.5f;
 	sphere.color = 0xffffffff;
 
+	Plane plane;
+	plane.distance = 0.5f;
+	plane.normal = { 0.0f, 1.0f,0.0f };
+	plane.normal = Normalize(plane.normal);
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -56,6 +60,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
 		DrawSphere(sphere, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+
+		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
 
 		ImGui::Begin("Set");
 		
