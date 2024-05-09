@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include <memory>
 #include "SphereCollision.h"
+#include "LineCollider.h"
 
 const char kWindowTitle[] = "LE2A_06_オオハラアオイ";
 
@@ -22,15 +23,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
 
+	// ---------------------------------------------------------------
+	// ↓ 球
+	// ---------------------------------------------------------------
 	Sphere sphere{};
 	sphere.center = { 0.0f, 0.0f, 0.0f };
 	sphere.radius = 0.5f;
 	sphere.color = 0xffffffff;
 
+	// ---------------------------------------------------------------
+	// ↓ 平面
+	// ---------------------------------------------------------------
 	Plane plane;
 	plane.distance = 0.5f;
 	plane.normal = { 0.0f, 1.0f,0.0f };
 	plane.normal = Normalize(plane.normal);
+
+	// ---------------------------------------------------------------
+	// ↓ 線
+	// ---------------------------------------------------------------
+	Vec3f segmentStPoint = { -1.0f, 0.0f, 0.0f };
+	Vec3f segmentEndPoint = { 1.0f, 1.0f, 1.0f };
+	Segment segment{ segmentStPoint,segmentEndPoint };
+	unsigned int lineColor = WHITE;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -47,6 +62,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
+		segment = { segmentStPoint,segmentEndPoint };
+
+		Vec3f start = Transform(Transform(segment.origin, camera_->GetViewProjectMatrix()), camera_->GetViewportMatrix());
+
+		Vec3f end = Transform(
+			Transform(
+				Add(segment.origin, segment.diff),
+				camera_->GetViewProjectMatrix()
+			),
+			camera_->GetViewportMatrix());
+
+		if (IsCollision(segment, plane)) {
+			lineColor = RED;
+		} else {
+			lineColor = WHITE;
+		}
+
 		///------------------///
 		/// ↑更新処理ここまで
 		///------------------///
@@ -59,14 +91,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawSphere(sphere, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), lineColor);
 
 		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
 
 		ImGui::Begin("Set");
-		ImGui::DragFloat3("plane:normal", &plane.normal.x, 0.01f);
-		ImGui::DragFloat("plane:normal", &plane.distance, 0.01f);
-		plane.normal = Normalize(plane.normal);
+		if (ImGui::TreeNode("plane")) {
+			ImGui::DragFloat3("plane:normal", &plane.normal.x, 0.01f);
+			ImGui::DragFloat("plane:normal", &plane.distance, 0.01f);
+			plane.normal = Normalize(plane.normal);
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("segmet")) {
+			ImGui::DragFloat3("StPoint", &segmentStPoint.x, 0.01f);
+			ImGui::DragFloat3("EndPoint", &segmentEndPoint.x, 0.01f);
+			ImGui::TreePop();
+		}
 		ImGui::End();
 
 
