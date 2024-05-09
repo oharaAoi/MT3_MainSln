@@ -30,7 +30,10 @@ public:
 
 	// ベクトルの減算
 	MyVector2 operator-(const MyVector2& obj)const{
-		return MyVector2(x - obj.x, y - obj.y);
+		MyVector2 result;
+		result.x = x - obj.x;
+		result.y = y - obj.y;
+		return result;
 	}
 
 	MyVector2 operator-(const float& obj)const {
@@ -70,6 +73,14 @@ public:
 		y /= obj.y;
 		return  *this;
 	}
+
+	MyVector2& operator=(const MyVector2& obj) {
+		x = obj.x;
+		y = obj.y;
+		return *this;
+	}
+
+	MyVector2() {};
 };
 
 using Vec2f = MyVector2<float>;
