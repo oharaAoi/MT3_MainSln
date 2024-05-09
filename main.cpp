@@ -95,6 +95,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
 
+		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
+
 		ImGui::Begin("Set");
 		if (ImGui::TreeNode("plane")) {
 			ImGui::DragFloat3("plane:normal", &plane.normal.x, 0.01f);
