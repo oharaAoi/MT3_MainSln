@@ -64,7 +64,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
 
 		ImGui::Begin("Set");
-		
+		ImGui::DragFloat3("plane:normal", &plane.normal.x, 0.01f);
+		ImGui::DragFloat("plane:normal", &plane.distance, 0.01f);
+		plane.normal = Normalize(plane.normal);
 		ImGui::End();
 
 
