@@ -59,9 +59,13 @@ void Triangle::MakeSceenVertex(const Matrix4x4& viewportMatrix){
 }
 
 void Triangle::CrossToCamera(const Vec3f& cameraDire) {
-	Vec3f a = screenVertex_[2] - screenVertex_[0];
-	Vec3f b = screenVertex_[1] - screenVertex_[2];
-	cross_ = Cross(b, a);
+	Vec3f worldVertex_[3];
+	for (int i = 0; i < 3; i++) {
+		worldVertex_[i] = Transform(kLocalVertex_[i], worldMatrix_);
+	}
+	Vec3f a = worldVertex_[2] - worldVertex_[0];
+	Vec3f b = worldVertex_[1] - worldVertex_[2];
+	cross_ = Cross(a, b);
 
 	dot_ = Dot(cameraDire, cross_);
 }
