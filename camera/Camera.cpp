@@ -42,7 +42,6 @@ void Camera::Draw(){
 }
 
 void Camera::RotateMove() {
-	
 	if (Novice::IsTriggerMouse(2)) {
 		Vec2 pos{};
 		Novice::GetMousePosition(&pos.x, &pos.y);
