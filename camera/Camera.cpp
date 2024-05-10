@@ -6,6 +6,7 @@ void Camera::Init(){
 
 	scale_ = { 1.0f, 1.0f, 1.0f };
 	rotate_ = { 0.26f, 0.0f, 0.0f };
+	//rotate_ = { 0.0f, 0.0f, 0.0f };
 	translation_ = { 0.0f, 1.9f, -6.49f };
 
 	scaleMat_ = MakeScaleMatrix(scale_);
@@ -111,28 +112,40 @@ void Camera::RotateMove() {
 		matRotDelta = Multiply(matRotDelta, MakeRotateXMatrix(normalizeDiff.y));
 		matRotDelta = Multiply(matRotDelta, MakeRotateYMatrix(normalizeDiff.x));
 
-		//Vec3f dire = Normalize(GetCameraDirection(matRot_));
-		//Vec3f dire = TransformNormal(offset, matRot_);
-		//Vec3f centerPos = translation_ + offset;
-
-		//translation_ = centerPos - TransformNormal(offset, matRotDelta);
-
-		//// 累積の回転行列の合成
-		//matRot_ = matRotDelta * matRot_;
-
-		// カメラの位置と視線の方向を考慮して、カメラの範囲の中心のワールド座標を計算する
-		Vec3f cameraCenterWorldPos = translation_ + offset;
-
-		// カメラの位置と視線の方向を考慮して、カメラの位置からカメラの中心のワールド座標を計算する
-		Vec3f cameraLookAtWorldPos = translation_ + TransformNormal(Vec3f{ 0, 0, -1 }, matRot_);
-
-		// カメラの範囲の中心のワールド座標を中心にしてカメラを回転させる
-		Vec3f pivot = (cameraCenterWorldPos + cameraLookAtWorldPos) * 0.5f;
-		translation_ = (pivot + (translation_ - pivot)) * matRotDelta;
+		// 累積の回転行列の合成
 		matRot_ = matRotDelta * matRot_;
 
+		/// -------------------------------------------------------------------------
+		Vec3f dire = TransformNormal(Vec3f(0, 0, 1), matRot_);
+		
+		// ビューポート行列
+		//Matrix4x4 matViewport = MakeViewportMatrix(0, 0, 1280, 720, 0, 1);
+		//// viewprojectionViewport合成行列
+		//Matrix4x4 matVPV = viewMatrix_ * projectionMatrix_ * matViewport;
+		//// 合成行列の逆行列を計算する
+		//Matrix4x4 matInverseVPV = Inverse(matVPV);
+
+		//// ニアクリップ面上のワールド座標を得る
+		//Vec3f posNear = Vec3f(static_cast<float>(640), static_cast<float>(360), 0);
+		//// ファークリップ面上のワールド座標を得る
+		//Vec3f posFar = Vec3f(static_cast<float>(640), static_cast<float>(360), 1);
+
+		//// スクリーンからワールドへ
+		//posNear = Transform(posNear, matInverseVPV);
+		//posFar = Transform(posFar, matInverseVPV);
+
+		//// mouseレイの方向
+		//Vec3f mouseDirection = posFar - posNear;
+		//mouseDirection = Normalize(mouseDirection);
+		//// カメラから照準オブジェクトの距離
+		//const float kDistanceTestObject = 6.0f;
+		//Vec3f centerPos = posNear + mouseDirection * kDistanceTestObject;
+
+		// -------------------------------------------------------------------------------
 		offset = TransformNormal(offset, matRot_);
-		offset = GetCameraDirection(matRot_);
+		Vec3f centerPos = translation_ + offset;
+		
+		translation_ = centerPos + offset;
 
 		cameraMatrix_ = Multiply(Multiply(scaleMat_, matRot_), MakeTranslateMatrix(translation_));
 		viewMatrix_ = Inverse(cameraMatrix_);
