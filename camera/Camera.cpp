@@ -40,14 +40,6 @@ void Camera::Update(){
 		RotateMove();
 	}
 
-	/*if (Novice::IsTriggerMouse(1)) {
-		if (debugCameraMode_) {
-			debugCameraMode_ = false;
-		} else {
-			debugCameraMode_ = true;
-		}
-	}*/
-
 	scaleMat_ = MakeScaleMatrix(scale_);
 	translateMat_ = MakeTranslateMatrix(translation_);
 
@@ -108,8 +100,8 @@ void Camera::TransitionMove() {
 }
 
 /// <summary>
-	/// カメラを回転させる
-	/// </summary>
+/// カメラを回転させる
+/// </summary>
 void Camera::RotateMove() {
 	if (Novice::IsPressMouse(1)) {
 		Vec2 pos{};
