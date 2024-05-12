@@ -33,9 +33,11 @@ void Camera::Init(){
 }
 
 void Camera::Update(){
-
+	// カメラの移動(x,y)
 	TransitionMove();
-
+	// カメラの移動(z)
+	ScrollMove();
+	// 回転
 	if (debugCameraMode_) {
 		RotateMove();
 	}
@@ -135,5 +137,31 @@ void Camera::RotateMove() {
 
 	} else if(!Novice::IsPressMouse(1)) {
 		Novice::GetMousePosition(&rotateMousePos_.x, &rotateMousePos_.y);
+	}
+}
+
+void Camera::ScrollMove() {
+	if (Novice::GetWheel() > 0) {
+		Vec3f direction = { 0,0,1 };
+
+		direction = TransformNormal(direction, matRot_);
+		Normalize(direction);
+
+		direction *= 0.1f;
+
+		translation_ += direction;
+		target_ += direction;
+
+		
+	} else if (Novice::GetWheel() < 0) {
+		Vec3f direction = { 0,0,-1 };
+
+		direction = TransformNormal(direction, matRot_);
+		Normalize(direction);
+
+		direction *= 0.1f;
+
+		translation_ += direction;
+		target_ += direction;
 	}
 }

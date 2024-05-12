@@ -64,6 +64,11 @@ public:
 	/// </summary>
 	void RotateMove();
 
+	/// <summary>
+	/// マウスのスクロールで移動する
+	/// </summary>
+	void ScrollMove();
+
 public:
 
 	Matrix4x4 GetViewMatrix() const { return viewMatrix_; }

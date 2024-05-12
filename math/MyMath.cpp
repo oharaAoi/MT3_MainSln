@@ -114,6 +114,14 @@ Vec3f Normalize(const Vec3f& vec3){
     return result;
 }
 
+void Normalize(Vec3f& v) {
+	float len = Length(v);
+	if (len != 0) {
+		v.x /= len;
+		v.y /= len;
+		v.z /= len;
+	}
+}
 
 /// <summary>
 /// 正射影ベクトル
