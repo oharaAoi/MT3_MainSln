@@ -2,6 +2,7 @@
 #include "MyVector2.h"
 #include "MyMatrix4x4.h"
 #include "MyVector3.h"
+#include "MyMath.h"
 
 #include "Environment.h"
 #include "ImGuiManager.h"
@@ -10,8 +11,12 @@ class Camera{
 
 private:
 
+	Vec3f scale_;
 	Vec3f translation_;
 	Vec3f rotate_;
+
+	Matrix4x4 translateMat_;
+	Matrix4x4 scaleMat_;
 
 	Matrix4x4 cameraMatrix_;
 	// ビュー行列
@@ -23,8 +28,21 @@ private:
 
 	Matrix4x4 viewportMatrix_;
 
+	// ------------------------------------------------------------- //
+	// デバックカメラ用の変数
+	// ------------------------------------------------------------- //
 	// マウスの座標
 	Vec2 mousePos_;
+	Vec2 rotateMousePos_;
+	// 差
+	Vec2f diff_;
+	Vec2f rotateDiff_;
+
+	Matrix4x4 matRot_;
+
+	bool debugCameraMode_;
+
+	Vec3f target_;
 
 public:
 
@@ -36,6 +54,14 @@ public:
 
 public:
 
+	/// <summary>
+	/// カメラを動かす
+	/// </summary>
+	void TransitionMove();
+
+	/// <summary>
+	/// カメラを回転させる
+	/// </summary>
 	void RotateMove();
 
 public:

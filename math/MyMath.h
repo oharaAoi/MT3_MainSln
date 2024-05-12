@@ -2,6 +2,7 @@
 #include "Vector2.h"
 #include "MyVector3.h"
 #include "Vector4.h"
+#include "MyMatrix4x4.h"
 
 #include <cmath>
 #define _USE_MATH_DEFINES
@@ -130,3 +131,14 @@ Vec3f Perpendicular(const Vec3f& vector);
 /// <param name="segment"></param>
 /// <returns></returns>
 Vec3f ClosestPoint(const Vec3f& point, const Segment& segment);
+
+
+/// <summary>
+/// ベクトル変換
+/// </summary>
+/// <param name="v"></param>
+/// <param name="m"></param>
+/// <returns></returns>
+Vec3f TransformNormal(const Vec3f& v, const Matrix4x4& m);
+
+Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat);
