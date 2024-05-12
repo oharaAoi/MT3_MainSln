@@ -89,8 +89,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), lineColor);
 
-		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
-
 		ImGui::Begin("Set");
 		
 		if (ImGui::TreeNode("segmet")) {
