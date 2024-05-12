@@ -91,6 +91,14 @@ Vec3f Cross(const Vec3f& v1, const Vec3f& v2);
 float Length(const Vec3f& vec3);
 
 /// <summary>
+/// 距離を求める
+/// </summary>
+/// <param name="v1">点1</param>
+/// <param name="v2">点2</param>
+/// <returns>距離</returns>
+float Distance(const Vec3f& v1, const Vec3f& v2);
+
+/// <summary>
 /// 正規化
 /// </summary>
 /// <param name="vec3"></param>

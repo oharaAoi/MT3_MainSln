@@ -73,6 +73,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			),
 			camera_->GetViewportMatrix());
 
+		if (IsCollision(triangle, segment)) {
+			lineColor = RED;
+		} else {
+			lineColor = WHITE;
+		}
+
 		///------------------///
 		/// ↑更新処理ここまで
 		///------------------///
