@@ -247,6 +247,54 @@ void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjection, con
 	);
 }
 
+/// <summary>
+/// AABB(軸平行境界箱)
+/// </summary>
+/// <param name="aabb">AABB(軸平行境界箱)</param>
+/// <param name="viewProjection">正射影行列</param>
+/// <param name="viewportMatrix">ビューポート行列</param>
+/// <param name="color">色</param>
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color) {
+	// ワールド行列を求める
+	Matrix4x4 worldMat = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, { 0,0,0 });
+
+	// 正射影行列を求める
+	Matrix4x4 vpvMat = Multiply(worldMat, viewProjection) * viewportMatrix;
+
+	// ローカルの頂点を求める
+	Vec3f localVertex[8];
+	// 手前の面
+	localVertex[0] = aabb.min;
+	localVertex[1] = {aabb.min.x, aabb.max.y, aabb.min.z};
+	localVertex[2] = {aabb.max.x, aabb.max.y , aabb.min.z};
+	localVertex[3] = {aabb.max.x, aabb.min.y , aabb.min.z};
+	// 奥の面
+	localVertex[4] = { aabb.min.x, aabb.min.y, aabb.max.z };
+	localVertex[5] = { aabb.min.x, aabb.max.y, aabb.max.z };
+	localVertex[6] = { aabb.max.x, aabb.min.y, aabb.max.z };
+	localVertex[7] = aabb.max;
+
+	// スクリーンの頂点を求める
+	Vec3f screenVertex[8];
+	for (size_t index = 0; index < 8; index++) {
+		screenVertex[index] = Transform(localVertex[index], vpvMat);
+	}
+
+	// 描画
+	Novice::DrawLine(static_cast<int>(screenVertex[0].x),static_cast<int>(screenVertex[0].y),static_cast<int>(screenVertex[1].x),static_cast<int>(screenVertex[1].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[0].x),static_cast<int>(screenVertex[0].y),static_cast<int>(screenVertex[3].x),static_cast<int>(screenVertex[3].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[0].x),static_cast<int>(screenVertex[0].y),static_cast<int>(screenVertex[4].x),static_cast<int>(screenVertex[4].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[1].x),static_cast<int>(screenVertex[1].y),static_cast<int>(screenVertex[2].x),static_cast<int>(screenVertex[2].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[1].x),static_cast<int>(screenVertex[1].y),static_cast<int>(screenVertex[5].x),static_cast<int>(screenVertex[5].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[2].x),static_cast<int>(screenVertex[2].y),static_cast<int>(screenVertex[3].x),static_cast<int>(screenVertex[3].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[2].x),static_cast<int>(screenVertex[2].y),static_cast<int>(screenVertex[7].x),static_cast<int>(screenVertex[7].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[3].x),static_cast<int>(screenVertex[3].y),static_cast<int>(screenVertex[6].x),static_cast<int>(screenVertex[6].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[4].x),static_cast<int>(screenVertex[4].y),static_cast<int>(screenVertex[5].x),static_cast<int>(screenVertex[5].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[4].x),static_cast<int>(screenVertex[4].y),static_cast<int>(screenVertex[6].x),static_cast<int>(screenVertex[6].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[5].x),static_cast<int>(screenVertex[5].y),static_cast<int>(screenVertex[7].x),static_cast<int>(screenVertex[7].y),color);
+	Novice::DrawLine(static_cast<int>(screenVertex[6].x),static_cast<int>(screenVertex[6].y),static_cast<int>(screenVertex[7].x),static_cast<int>(screenVertex[7].y),color);
+}
+
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);

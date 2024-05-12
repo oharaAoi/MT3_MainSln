@@ -6,6 +6,7 @@
 #include <memory>
 #include "SphereCollision.h"
 #include "LineCollider.h"
+#include "BoxCollider.h"
 
 const char kWindowTitle[] = "LE2A_06_オオハラアオイ";
 
@@ -32,20 +33,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sphere.color = 0xffffffff;
 
 	// ---------------------------------------------------------------
-	// ↓ 三角形
+	// ↓ AABB
 	// ---------------------------------------------------------------
-	Triangle triangle{};
-	triangle.vertices[0] = Vec3f(0, 1, 0);
-	triangle.vertices[1] = Vec3f(1, 0, 0);
-	triangle.vertices[2] = Vec3f(-1, 0, 0);
+	AABB aabb1{
+		.min{-0.5f, -0.5f, -0.5f},
+		.max{0.0f, 0.0f, 0.0f},
+	};
+	unsigned int color1 = WHITE;
 
-	// ---------------------------------------------------------------
-	// ↓ 線
-	// ---------------------------------------------------------------
-	Vec3f segmentStPoint = { -1.0f, 0.0f, 0.0f };
-	Vec3f segmentEndPoint = { 1.0f, 1.0f, 1.0f };
-	Segment segment{ segmentStPoint,segmentEndPoint };
-	unsigned int lineColor = WHITE;
+	AABB aabb2{
+		.min{0.2f, 0.2f, 0.2f},
+		.max{1.0f, 1.0f, 1.0f},
+	};
+	unsigned int color2 = WHITE;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -62,16 +62,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		segment = { segmentStPoint,segmentEndPoint };
+		// ------------------------ minとmaxが入れ替わらないように ------------------------ //
+		aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
+		aabb1.max.x = (std::max)(aabb1.min.x, aabb1.max.x);
 
-		Vec3f start = Transform(Transform(segment.origin, camera_->GetViewProjectMatrix()), camera_->GetViewportMatrix());
+		aabb1.min.y = (std::min)(aabb1.min.y, aabb1.max.y);
+		aabb1.max.y = (std::max)(aabb1.min.y, aabb1.max.y);
 
-		Vec3f end = Transform(
-			Transform(
-				Add(segment.origin, segment.diff),
-				camera_->GetViewProjectMatrix()
-			),
-			camera_->GetViewportMatrix());
+		aabb1.min.z = (std::min)(aabb1.min.z, aabb1.max.z);
+		aabb1.max.z = (std::max)(aabb1.min.z, aabb1.max.z);
+
+		aabb2.min.x = (std::min)(aabb2.min.x, aabb2.max.x);
+		aabb2.max.x = (std::max)(aabb2.min.x, aabb2.max.x);
+
+		aabb2.min.y = (std::min)(aabb2.min.y, aabb2.max.y);
+		aabb2.max.y = (std::max)(aabb2.min.y, aabb2.max.y);
+
+		aabb2.min.z = (std::min)(aabb2.min.z, aabb2.max.z);
+		aabb2.max.z = (std::max)(aabb2.min.z, aabb2.max.z);
+
+		// ------------------------ 当たり判定 ------------------------ //
+		if (IsCollision(aabb1, aabb2)) {
+			color1 = RED;
+		} else {
+			color1 = WHITE;
+		}
+
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -85,15 +101,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawTriangle(triangle, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE, true);
-
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), lineColor);
+		DrawAABB(aabb1, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), color1);
+		DrawAABB(aabb2, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), color2);
 
 		ImGui::Begin("Set");
 		
-		if (ImGui::TreeNode("segmet")) {
-			ImGui::DragFloat3("StPoint", &segmentStPoint.x, 0.01f);
-			ImGui::DragFloat3("EndPoint", &segmentEndPoint.x, 0.01f);
+		if (ImGui::TreeNode("AABB1")) {
+			ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.1f, 0.1f);
+			ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.1f, 0.1f);
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("AABB2")) {
+			ImGui::DragFloat3("aabb2.min", &aabb2.min.x, 0.1f, 0.1f);
+			ImGui::DragFloat3("aabb2.max", &aabb2.max.x, 0.1f, 0.1f);
 			ImGui::TreePop();
 		}
 		ImGui::End();

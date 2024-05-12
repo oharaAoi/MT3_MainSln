@@ -20,8 +20,19 @@ struct Plane {
 	float distance;	// 距離
 };
 
+/// <summary>
+/// 三角形
+/// </summary>
 struct Triangle {
 	Vec3f vertices[3];
+};
+
+/// <summary>
+/// AABB(軸平行境界箱)
+/// </summary>
+struct AABB {
+	Vec3f min;
+	Vec3f max;
 };
 
 /// <summary>
@@ -58,6 +69,14 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjection, const Matrix
 /// <param name="isWier">塗りつぶすか</param>
 void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color, const bool& isWier);
 
+/// <summary>
+/// AABB(軸平行境界箱)
+/// </summary>
+/// <param name="aabb">AABB(軸平行境界箱)</param>
+/// <param name="viewProjection">正射影行列</param>
+/// <param name="viewportMatrix">ビューポート行列</param>
+/// <param name="color">色</param>
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color);
 
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label);
