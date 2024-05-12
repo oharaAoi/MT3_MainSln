@@ -132,3 +132,5 @@ Vec3f ClosestPoint(const Vec3f& point, const Segment& segment);
 /// <param name="m"></param>
 /// <returns></returns>
 Vec3f TransformNormal(const Vec3f& v, const Matrix4x4& m);
+
+Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat);

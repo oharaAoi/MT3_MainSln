@@ -1,5 +1,14 @@
 ﻿#include "MyMatrix4x4.h"
 
+Vec3f AddMat(const Vec3f& v, const Matrix4x4& mat) {
+    Vec3f result{};
+    result.x = mat.m[0][0] + v.x + mat.m[0][1] + v.y + mat.m[0][2] + v.z + mat.m[0][3];
+    result.y = mat.m[1][0] + v.x + mat.m[1][1] + v.y + mat.m[1][2] + v.z + mat.m[1][3];
+    result.z = mat.m[2][0] + v.x + mat.m[2][1] + v.y + mat.m[2][2] + v.z + mat.m[2][3];
+
+    return result;
+}
+
 Vec3f ScalarMat(const Vec3f& v, const Matrix4x4& mat) {
     Vec3f result{};
     result.x = mat.m[0][0] * v.x + mat.m[0][1] * v.y + mat.m[0][2] * v.z + mat.m[0][3];

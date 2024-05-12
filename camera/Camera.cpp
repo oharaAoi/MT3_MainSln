@@ -7,7 +7,9 @@ void Camera::Init(){
 	scale_ = { 1.0f, 1.0f, 1.0f };
 	rotate_ = { 0.26f, 0.0f, 0.0f };
 	//rotate_ = { 0.0f, 0.0f, 0.0f };
-	translation_ = { 0.0f, 1.9f, -6.49f };
+	translation_ = { 0.0f, 1.542f, -5.798f };
+
+	target_ = { 0,0,0 };
 
 	scaleMat_ = MakeScaleMatrix(scale_);
 	matRot_ = MakeRotateXYZMatrix(rotate_);
@@ -70,9 +72,20 @@ void Camera::Draw(){
 	ImGui::DragFloat2("diff_ ", &rotateDiff_.x, 0.01f);
 	ImGui::DragInt2("mousePos ", &mousePos_.x, 0.01f);
 
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			ImGui::InputFloat("matRot", &matRot_.m[i][j], 0.01f, 1.0f);
+			ImGui::SameLine();
+		}
+		ImGui::NewLine();
+	}
+
 	ImGui::End();
 }
 
+/// <summary>
+	/// カメラを動かす
+	/// </summary>
 void Camera::TransitionMove() {
 	if (Novice::IsPressMouse(2)) {
 		Vec2 pos{};
@@ -87,17 +100,21 @@ void Camera::TransitionMove() {
 		move = TransformNormal(Normalize({ diff_.x, diff_.y, 0 }) * speed, cameraMatrix_);
 
 		translation_ += move;
+		target_ += move;
 
 	} else if(!Novice::IsPressMouse(2)) {
 		Novice::GetMousePosition(&mousePos_.x, &mousePos_.y);
 	}
 }
 
+/// <summary>
+	/// カメラを回転させる
+	/// </summary>
 void Camera::RotateMove() {
 	if (Novice::IsPressMouse(1)) {
 		Vec2 pos{};
 		Vec3f normalizeDiff{};
-		Vec3f offset = { 0.0f, 1.9f, -6.49f };
+		Vec3f offset = { 0.0f, 2.0f, -6.0f };
 		const float speed = 0.015f;
 		// マウスの位置を得る
 		Novice::GetMousePosition(&pos.x, &pos.y);
@@ -109,43 +126,17 @@ void Camera::RotateMove() {
 
 		// 追加回転分の回転行列を生成
 		Matrix4x4 matRotDelta = MakeIdentity4x4();
-		matRotDelta = Multiply(matRotDelta, MakeRotateXMatrix(normalizeDiff.y));
-		matRotDelta = Multiply(matRotDelta, MakeRotateYMatrix(normalizeDiff.x));
+		matRotDelta *= MakeRotateXMatrix(normalizeDiff.y);
+		matRotDelta *= MakeRotateYMatrix(normalizeDiff.x);
 
 		// 累積の回転行列の合成
 		matRot_ = matRotDelta * matRot_;
 
 		/// -------------------------------------------------------------------------
-		Vec3f dire = TransformNormal(Vec3f(0, 0, 1), matRot_);
-		
-		// ビューポート行列
-		//Matrix4x4 matViewport = MakeViewportMatrix(0, 0, 1280, 720, 0, 1);
-		//// viewprojectionViewport合成行列
-		//Matrix4x4 matVPV = viewMatrix_ * projectionMatrix_ * matViewport;
-		//// 合成行列の逆行列を計算する
-		//Matrix4x4 matInverseVPV = Inverse(matVPV);
-
-		//// ニアクリップ面上のワールド座標を得る
-		//Vec3f posNear = Vec3f(static_cast<float>(640), static_cast<float>(360), 0);
-		//// ファークリップ面上のワールド座標を得る
-		//Vec3f posFar = Vec3f(static_cast<float>(640), static_cast<float>(360), 1);
-
-		//// スクリーンからワールドへ
-		//posNear = Transform(posNear, matInverseVPV);
-		//posFar = Transform(posFar, matInverseVPV);
-
-		//// mouseレイの方向
-		//Vec3f mouseDirection = posFar - posNear;
-		//mouseDirection = Normalize(mouseDirection);
-		//// カメラから照準オブジェクトの距離
-		//const float kDistanceTestObject = 6.0f;
-		//Vec3f centerPos = posNear + mouseDirection * kDistanceTestObject;
-
-		// -------------------------------------------------------------------------------
-		offset = TransformNormal(offset, matRot_);
-		Vec3f centerPos = translation_ + offset;
-		
-		translation_ = centerPos + offset;
+		// 旋回させる
+		offset = TransformNormal(Vec3f(0, 0, -6), matRot_);
+		// 位置を動かす
+		translation_ = target_ + offset;
 
 		cameraMatrix_ = Multiply(Multiply(scaleMat_, matRot_), MakeTranslateMatrix(translation_));
 		viewMatrix_ = Inverse(cameraMatrix_);
@@ -153,9 +144,4 @@ void Camera::RotateMove() {
 	} else if(!Novice::IsPressMouse(1)) {
 		Novice::GetMousePosition(&rotateMousePos_.x, &rotateMousePos_.y);
 	}
-}
-
-Vec3f Camera::GetCameraDirection(const Matrix4x4& rotationMatrix) {
-	// カメラの向いている方向は回転行列の3つ目の列を取り出す
-	return { rotationMatrix.m[0][2], rotationMatrix.m[1][2], rotationMatrix.m[2][2] };
 }

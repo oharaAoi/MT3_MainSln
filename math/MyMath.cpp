@@ -170,3 +170,11 @@ Vec3f TransformNormal(const Vec3f& v, const Matrix4x4& m) {
 
 	return result;
 }
+
+Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat) {
+	Vec3f result;
+	result.x = mat.m[0][0] * direction.x + mat.m[0][1] * direction.y + mat.m[0][2] * direction.z;
+	result.y = mat.m[1][0] * direction.x + mat.m[1][1] * direction.y + mat.m[1][2] * direction.z;
+	result.z = mat.m[2][0] * direction.x + mat.m[2][1] * direction.y + mat.m[2][2] * direction.z;
+	return result;
+}

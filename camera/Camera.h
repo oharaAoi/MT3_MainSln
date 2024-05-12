@@ -42,6 +42,8 @@ private:
 
 	bool debugCameraMode_;
 
+	Vec3f target_;
+
 public:
 
 	Camera();
@@ -52,11 +54,15 @@ public:
 
 public:
 
+	/// <summary>
+	/// カメラを動かす
+	/// </summary>
 	void TransitionMove();
 
+	/// <summary>
+	/// カメラを回転させる
+	/// </summary>
 	void RotateMove();
-
-	Vec3f GetCameraDirection(const Matrix4x4& rotationMatrix);
 
 public:
 
