@@ -108,7 +108,6 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="C:\KamataEngine\DirectXGame\base\StringUtility.cpp" />
     <ClCompile Include="C:\KamataEngine\DirectXGame\base\DirectXCommon.cpp" />
     <ClCompile Include="C:\KamataEngine\DirectXGame\base\WinApp.cpp" />
@@ -117,8 +116,9 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="C:\KamataEngine\DirectXGame\2d\ImGuiManager.cpp" />
     <ClCompile Include="C:\KamataEngine\Adapter\Novice.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
+    <ClCompile Include="collision\BoxCollider.cpp" />
+    <ClCompile Include="collision\LineCollider.cpp" />
     <ClCompile Include="collision\SphereCollision.cpp" />
-    <ClCompile Include="LineCollider.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\MyMath.cpp" />
     <ClCompile Include="math\MyMatrix4x4.cpp" />
@@ -127,7 +127,6 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="renderUtils\DrawUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="C:\KamataEngine\DirectXGame\base\StringUtility.h" />
     <ClInclude Include="C:\KamataEngine\DirectXGame\math\Matrix4x4.h" />
     <ClInclude Include="C:\KamataEngine\DirectXGame\math\Vector2.h" />
@@ -156,9 +155,10 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="C:\KamataEngine\DirectXGame\scene\GameScene.h" />
     <ClInclude Include="C:\KamataEngine\Adapter\Novice.h" />
     <ClInclude Include="camera\Camera.h" />
+    <ClInclude Include="collision\BoxCollider.h" />
+    <ClInclude Include="collision\LineCollider.h" />
     <ClInclude Include="collision\SphereCollision.h" />
     <ClInclude Include="Environment.h" />
-    <ClInclude Include="LineCollider.h" />
     <ClInclude Include="math\MyMath.h" />
     <ClInclude Include="math\MyMatrix4x4.h" />
     <ClInclude Include="math\MyVector2.h" />

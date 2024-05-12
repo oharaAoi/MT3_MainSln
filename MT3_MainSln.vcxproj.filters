@@ -23,6 +23,9 @@
     <Filter Include="renderUtils">
       <UniqueIdentifier>{cf915bda-2fa5-4dde-8478-6ef5e50f0f7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="collider">
+      <UniqueIdentifier>{cf9aebb7-ad8c-489a-a12c-791ae27482da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\KamataEngine\DirectXGame\base\DirectXCommon.cpp">
@@ -62,17 +65,17 @@
     <ClCompile Include="math\MyVector3.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="collision\SphereCollision.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="LineCollider.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
     <ClCompile Include="math\MyVector2.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="BoxCollider.cpp">
-      <Filter>KamataEngine</Filter>
+    <ClCompile Include="collision\BoxCollider.cpp">
+      <Filter>collider</Filter>
+    </ClCompile>
+    <ClCompile Include="collision\LineCollider.cpp">
+      <Filter>collider</Filter>
+    </ClCompile>
+    <ClCompile Include="collision\SphereCollision.cpp">
+      <Filter>collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -163,9 +166,15 @@
     <ClInclude Include="math\MyVector3.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="collision\SphereCollision.h" />
-    <ClInclude Include="LineCollider.h" />
     <ClInclude Include="math\MyVector2.h" />
-    <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="collision\BoxCollider.h">
+      <Filter>collider</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\LineCollider.h">
+      <Filter>collider</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\SphereCollision.h">
+      <Filter>collider</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
