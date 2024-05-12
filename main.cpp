@@ -32,12 +32,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sphere.color = 0xffffffff;
 
 	// ---------------------------------------------------------------
-	// ↓ 三角形
+	// ↓ 平面
 	// ---------------------------------------------------------------
-	Triangle triangle{};
-	triangle.vertices[0] = Vec3f(0, 1, 0);
-	triangle.vertices[1] = Vec3f(1, 0, 0);
-	triangle.vertices[2] = Vec3f(-1, 0, 0);
+	Plane plane;
+	plane.distance = 0.5f;
+	plane.normal = { 0.0f, 1.0f,0.0f };
+	plane.normal = Normalize(plane.normal);
 
 	// ---------------------------------------------------------------
 	// ↓ 線
@@ -73,6 +73,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			),
 			camera_->GetViewportMatrix());
 
+		if (IsCollision(segment, plane)) {
+			lineColor = RED;
+		} else {
+			lineColor = WHITE;
+		}
+
 		///------------------///
 		/// ↑更新処理ここまで
 		///------------------///
@@ -85,12 +91,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawTriangle(triangle, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE, true);
-
 		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), lineColor);
 
+		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), 0xffffffff);
+
 		ImGui::Begin("Set");
-		
+		if (ImGui::TreeNode("plane")) {
+			ImGui::DragFloat3("plane:normal", &plane.normal.x, 0.01f);
+			ImGui::DragFloat("plane:normal", &plane.distance, 0.01f);
+			plane.normal = Normalize(plane.normal);
+			ImGui::TreePop();
+		}
+
 		if (ImGui::TreeNode("segmet")) {
 			ImGui::DragFloat3("StPoint", &segmentStPoint.x, 0.01f);
 			ImGui::DragFloat3("EndPoint", &segmentEndPoint.x, 0.01f);

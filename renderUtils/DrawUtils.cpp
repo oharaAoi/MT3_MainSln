@@ -213,40 +213,6 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjection, const Matrix
 		0x0000ffff);
 }
 
-void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color, const bool& isWier) {
-	// 重心を求める
-	Vec3f centroid = {
-		((triangle.vertices[0].x + triangle.vertices[1].x + triangle.vertices[2].x) / 3),
-		((triangle.vertices[0].y + triangle.vertices[1].y + triangle.vertices[2].y) / 3),
-		0 
-	};
-
-	centroid = {0,0,0};
-
-	// ワールド行列を求める
-	Matrix4x4 worldMat = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, centroid);
-
-	// 正射影行列を求める
-	Matrix4x4 vpvMat = Multiply(worldMat, viewProjection) * viewportMatrix;
-
-	// スクリーンの頂点を求める
-	Vec3f screenVer[3];
-	for (uint32_t index = 0; index < 3; index++) {
-		screenVer[index] = Transform(triangle.vertices[index], vpvMat);
-	}
-
-	Novice::DrawTriangle(
-		static_cast<int>(screenVer[0].x),
-		static_cast<int>(screenVer[0].y),
-		static_cast<int>(screenVer[1].x),
-		static_cast<int>(screenVer[1].y),
-		static_cast<int>(screenVer[2].x),
-		static_cast<int>(screenVer[2].y),
-		color,
-		isWier ? kFillModeWireFrame : kFillModeSolid
-	);
-}
-
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
