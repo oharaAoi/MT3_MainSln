@@ -97,16 +97,6 @@ float Length(const Vec3f& vec3) {
 }
 
 /// <summary>
-/// 距離を求める
-/// </summary>
-/// <param name="v1">点1</param>
-/// <param name="v2">点2</param>
-/// <returns>距離</returns>
-float Distance(const Vec3f& v1, const Vec3f& v2) {
-	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
-}
-
-/// <summary>
 /// 正規化
 /// </summary>
 /// <param name="vec3"></param>
