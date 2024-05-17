@@ -28,7 +28,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ↓ 球
 	// ---------------------------------------------------------------
 	Sphere sphere{};
-	sphere.center = { 0.0f, 0.0f, 0.0f };
+	sphere.center = { 1.0f, 0.5f, 0.0f };
 	sphere.radius = 0.5f;
 	sphere.color = 0xffffffff;
 
@@ -41,11 +41,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	};
 	unsigned int color1 = WHITE;
 
-	AABB aabb2{
-		.min{0.2f, 0.2f, 0.2f},
-		.max{1.0f, 1.0f, 1.0f},
-	};
-	unsigned int color2 = WHITE;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -72,22 +67,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		aabb1.min.z = (std::min)(aabb1.min.z, aabb1.max.z);
 		aabb1.max.z = (std::max)(aabb1.min.z, aabb1.max.z);
 
-		aabb2.min.x = (std::min)(aabb2.min.x, aabb2.max.x);
-		aabb2.max.x = (std::max)(aabb2.min.x, aabb2.max.x);
-
-		aabb2.min.y = (std::min)(aabb2.min.y, aabb2.max.y);
-		aabb2.max.y = (std::max)(aabb2.min.y, aabb2.max.y);
-
-		aabb2.min.z = (std::min)(aabb2.min.z, aabb2.max.z);
-		aabb2.max.z = (std::max)(aabb2.min.z, aabb2.max.z);
-
 		// ------------------------ 当たり判定 ------------------------ //
-		if (IsCollision(aabb1, aabb2)) {
+
+		if (IsCollision(aabb1, sphere)) {
 			color1 = RED;
 		} else {
 			color1 = WHITE;
 		}
-
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -101,8 +87,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
+		DrawSphere(sphere, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+
 		DrawAABB(aabb1, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), color1);
-		DrawAABB(aabb2, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), color2);
 
 		ImGui::Begin("Set");
 		
@@ -112,11 +99,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNode("AABB2")) {
-			ImGui::DragFloat3("aabb2.min", &aabb2.min.x, 0.1f, 0.1f);
-			ImGui::DragFloat3("aabb2.max", &aabb2.max.x, 0.1f, 0.1f);
+		if (ImGui::TreeNode("sphere")) {
+			ImGui::DragFloat3("center", &sphere.center.x, 0.1f, 0.1f);
+			ImGui::DragFloat("radius", &sphere.radius, 0.1f, 0.1f);
 			ImGui::TreePop();
 		}
+
 		ImGui::End();
 
 
