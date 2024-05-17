@@ -25,19 +25,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
 
 	// ---------------------------------------------------------------
-	// ↓ 球
+	// ↓ 線分
 	// ---------------------------------------------------------------
-	Sphere sphere{};
-	sphere.center = { 1.0f, 0.5f, 0.0f };
-	sphere.radius = 0.5f;
-	sphere.color = 0xffffffff;
+	Segment segment{
+		.origin{-0.7f, 0.3f, 0.0f},
+		.diff{2.0f, -0.5f, 0.0f}
+	};
 
 	// ---------------------------------------------------------------
 	// ↓ AABB
 	// ---------------------------------------------------------------
 	AABB aabb1{
 		.min{-0.5f, -0.5f, -0.5f},
-		.max{0.0f, 0.0f, 0.0f},
+		.max{0.5f, 0.5f, 0.5f},
 	};
 	unsigned int color1 = WHITE;
 
@@ -57,6 +57,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
+		Vec3f start = Transform(Transform(segment.origin, camera_->GetViewProjectMatrix()), camera_->GetViewportMatrix());
+
+		Vec3f end = Transform(
+			Transform(
+				Add(segment.origin, segment.diff),
+				camera_->GetViewProjectMatrix()
+			),
+			camera_->GetViewportMatrix());
+
 		// ------------------------ minとmaxが入れ替わらないように ------------------------ //
 		aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
 		aabb1.max.x = (std::max)(aabb1.min.x, aabb1.max.x);
@@ -69,10 +78,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// ------------------------ 当たり判定 ------------------------ //
 
-		if (IsCollision(aabb1, sphere)) {
-			color1 = RED;
-		} else {
-			color1 = WHITE;
+		if (IsCollision(aabb1, segment)) {
+
 		}
 
 		///------------------///
@@ -87,21 +94,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawSphere(sphere, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
-
 		DrawAABB(aabb1, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), color1);
+
+		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
 
 		ImGui::Begin("Set");
 
 		if (ImGui::TreeNode("AABB1")) {
 			ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.1f, 0.1f);
 			ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.1f, 0.1f);
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("sphere")) {
-			ImGui::DragFloat3("center", &sphere.center.x, 0.1f, 0.1f);
-			ImGui::DragFloat("radius", &sphere.radius, 0.1f, 0.1f);
 			ImGui::TreePop();
 		}
 

@@ -41,3 +41,35 @@ bool IsCollision(const AABB& aabb, const Sphere& sphere) {
 
 	return false;
 }
+
+bool IsCollision(const AABB& aabb, const Segment& segment) {
+	// 衝突点の媒介変数を求める
+	Vec3f tMin = (aabb.min - segment.origin) / segment.diff;
+	Vec3f tMax = (aabb.max - segment.origin) / segment.diff;
+
+	// 衝突点の内近い方と小さい方を求める
+	Vec3f tNear{
+		std::min(tMin.x, tMin.y),
+		std::min(tMin.x, tMin.y),
+		std::min(tMin.x, tMin.y),
+	};
+
+	// 遠い方
+	Vec3f tFar{
+		std::max(tMin.x, tMin.y),
+		std::max(tMin.x, tMin.y),
+		std::max(tMin.x, tMin.y),
+	};
+
+	// 貫通している状況かを調べる
+	// 近い方の大きい方を求める
+	float minMax = std::max(std::max(tNear.x, tNear.y), tNear.z);
+	// 遠い方の小さい方を求める
+	float maxMin = std::min(std::min(tFar.x, tFar.y), tFar.z);
+
+	if (minMax <= maxMin) {
+		return true;
+	}
+
+	return false;
+}
