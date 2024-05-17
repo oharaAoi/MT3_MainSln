@@ -102,6 +102,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::DragFloat3("EndPoint", &segmentEndPoint.x, 0.01f);
 			ImGui::TreePop();
 		}
+
+		if (ImGui::TreeNode("Triangle")) {
+			ImGui::DragFloat3("vertices[0]", &triangle.vertices[0].x, 0.01f);
+			ImGui::DragFloat3("vertices[1]", &triangle.vertices[1].x, 0.01f);
+			ImGui::DragFloat3("vertices[2]", &triangle.vertices[2].x, 0.01f);
+			ImGui::TreePop();
+		}
+
 		ImGui::End();
 
 
