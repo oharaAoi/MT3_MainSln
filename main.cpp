@@ -92,7 +92,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawAABB(aabb1, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), color1);
 
 		ImGui::Begin("Set");
-		
+
 		if (ImGui::TreeNode("AABB1")) {
 			ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.1f, 0.1f);
 			ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.1f, 0.1f);
