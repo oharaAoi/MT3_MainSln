@@ -2,6 +2,8 @@
 #include "MyMath.h"
 #include "MyMatrix4x4.h"
 #include "DrawUtils.h"
+#undef min
+#undef max
 #include <algorithm>
 
 /// <summary>
@@ -19,3 +21,11 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 /// <param name="sphere">球</param>
 /// <returns>true: 当たっている false: 当たっていない</returns>
 bool IsCollision(const AABB& aabb, const Sphere& sphere);
+
+/// <summary>///
+/// 線分との当たり判定
+/// </summary>///
+///  <param name="aabb">箱</param>
+/// <param name="segment">線分</param>
+/// <returns>true: 当たっている false: 当たっていない</returns>
+bool IsCollision(const AABB& aabb, const Segment& segment);

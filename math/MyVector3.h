@@ -91,6 +91,33 @@ public:
 		z *= obj;
 		return *this;
 	}
+
+	/// <summary>
+	/// 除算
+	/// </summary>
+	/// <param name="obj"></param>
+	/// <returns></returns>
+	MyVector3 operator/(const MyVector3& obj) const {
+		return MyVector3(x / obj.x, y / obj.y, z / obj.z);
+	}
+
+	MyVector3 operator/(const float& obj) const {
+		return MyVector3(x / obj, y / obj, z / obj);
+	}
+
+	/*MyVector3 operator/=(const MyVector3& obj) {
+		x /= obj.x;
+		y /= obj.y;
+		z /= obj.z;
+		return /this;
+	}
+
+	MyVector3 operator/=(const float& obj) {
+		x /= obj;
+		y /= obj;
+		z /= obj;
+		return /this;
+	}*/
 };
 
 using Vec3f = MyVector3<float>;
