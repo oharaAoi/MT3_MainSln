@@ -49,26 +49,36 @@ bool IsCollision(const AABB& aabb, const Segment& segment) {
 
 	// 衝突点の内近い方と小さい方を求める
 	Vec3f tNear{
-		std::min(tMin.x, tMin.y),
-		std::min(tMin.x, tMin.y),
-		std::min(tMin.x, tMin.y),
+		std::min(tMin.x, tMax.x),
+		std::min(tMin.y, tMax.y),
+		std::min(tMin.z, tMax.z),
 	};
 
 	// 遠い方
 	Vec3f tFar{
-		std::max(tMin.x, tMin.y),
-		std::max(tMin.x, tMin.y),
-		std::max(tMin.x, tMin.y),
+		std::max(tMin.x, tMax.x),
+		std::max(tMin.y, tMax.y),
+		std::max(tMin.z, tMax.z),
 	};
 
 	// 貫通している状況かを調べる
 	// 近い方の大きい方を求める
-	float minMax = std::max(std::max(tNear.x, tNear.y), tNear.z);
+	float tmin = std::max(std::max(tNear.x, tNear.y), tNear.z);
 	// 遠い方の小さい方を求める
-	float maxMin = std::min(std::min(tFar.x, tFar.y), tFar.z);
+	float tmax = std::min(std::min(tFar.x, tFar.y), tFar.z);
 
-	if (minMax <= maxMin) {
-		return true;
+	if (tmin <= tmax) {
+		if (0 <= tmin && tmin <= 1) {
+			return true;
+		}
+
+		if (0 <= tmax && tmax <= 1) {
+			return true;
+		}
+
+		if (tmin <= 0 && tmax >= 1) {
+			return true;
+		}
 	}
 
 	return false;
