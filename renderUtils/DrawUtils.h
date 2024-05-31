@@ -36,6 +36,19 @@ struct AABB {
 };
 
 /// <summary>
+/// OBB(有向境界箱)
+/// </summary>
+struct OBB {
+	Vec3f center; // 中心点
+	Vec3f orientations[3]; // 座標軸、正規化、直交必須
+	Vec3f size; // 座標軸方向の長さの半分
+
+	Matrix4x4 matRotate;
+
+	void MakeOBBAxis(const Vec3f& rotate);
+};
+
+/// <summary>
 /// グリット線を引く関数
 /// </summary>
 /// <param name="viewPrijectionMatrix"></param>
@@ -77,6 +90,15 @@ void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjection, con
 /// <param name="viewportMatrix">ビューポート行列</param>
 /// <param name="color">色</param>
 void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color);
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="obb"></param>
+/// <param name="viewProjection"></param>
+/// <param name="viewportMatrix"></param>
+/// <param name="color"></param>
+void DrawOBB(const OBB& obb, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color);
 
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label);

@@ -25,27 +25,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
 
 	// ---------------------------------------------------------------
-	// ↓ 線分
+	// ↓ OBB
 	// ---------------------------------------------------------------
-	Segment segment{
-		.origin{-0.7f, 0.3f, 0.0f},
-		.diff{0.0f, 2.0f, 0.0f}
+	Vec3f rotate = { 45.0f, 0.0f, 0.0f };
+	OBB obb{
+		.center {-2.0f, 0.0f, 0.0f},
+		.orientations = {
+			{1.0f, 0.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f},
+			{0.0f, 0.0f, 1.0f},
+		},
+		.size{0.5f, 0.5f, 0.5f}
 	};
 
+	obb.MakeOBBAxis(rotate);
+
+	uint32_t obbColor = WHITE;
+
 	// ---------------------------------------------------------------
-	// ↓ AABB
+	// ↓ Sphere
 	// ---------------------------------------------------------------
-	AABB aabb1{
-		.min{-0.5f, -0.5f, -0.5f},
-		.max{0.5f, 0.5f, 0.5f},
+	Sphere sphere{
+		.center{0.0f, 0.0f, 0.0f},
+		.radius{0.5f},
+		.color{WHITE}
 	};
-	unsigned int color1 = WHITE;
 
-	Vec3f a = { -0.321f, 0.124f, 0.938f };
-	Vec3f b = { 0.493f, 0.248f, -0.833f };
-
-	float t = Dot(a, b);
-	t = 0;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -62,31 +67,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		Vec3f start = Transform(Transform(segment.origin, camera_->GetViewProjectMatrix()), camera_->GetViewportMatrix());
-
-		Vec3f end = Transform(
-			Transform(
-				Add(segment.origin, segment.diff),
-				camera_->GetViewProjectMatrix()
-			),
-			camera_->GetViewportMatrix());
-
 		// ------------------------ minとmaxが入れ替わらないように ------------------------ //
-		aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
+		/*aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
 		aabb1.max.x = (std::max)(aabb1.min.x, aabb1.max.x);
 
 		aabb1.min.y = (std::min)(aabb1.min.y, aabb1.max.y);
 		aabb1.max.y = (std::max)(aabb1.min.y, aabb1.max.y);
 
 		aabb1.min.z = (std::min)(aabb1.min.z, aabb1.max.z);
-		aabb1.max.z = (std::max)(aabb1.min.z, aabb1.max.z);
+		aabb1.max.z = (std::max)(aabb1.min.z, aabb1.max.z);*/
+
+		obb.MakeOBBAxis(rotate);
 
 		// ------------------------ 当たり判定 ------------------------ //
-
-		if (IsCollision(aabb1, segment)) {
-			color1 = RED;
+		if (IsCollision(obb, sphere)) {
+			obbColor = RED;
 		} else {
-			color1 = WHITE;
+			obbColor = WHITE;
 		}
 
 		///------------------///
@@ -101,21 +98,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawAABB(aabb1, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), color1);
+		DrawOBB(obb, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), obbColor);
 
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
+		DrawSphere(sphere, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
 		ImGui::Begin("Set");
 
-		if (ImGui::TreeNode("AABB1")) {
-			ImGui::DragFloat3("aabb1.min", &aabb1.min.x, 0.1f, 0.1f);
-			ImGui::DragFloat3("aabb1.max", &aabb1.max.x, 0.1f, 0.1f);
-			ImGui::TreePop();
-		}
+		if (ImGui::TreeNode("OBB")) {
+			ImGui::DragFloat3("obb.center", &obb.center.x, 0.1f, 0.1f);
+			ImGui::DragFloat3("rotate", &rotate.x, 1.0f);
 
-		if (ImGui::TreeNode("Segment")) {
-			ImGui::DragFloat3("segment.origin", &segment.origin.x, 0.1f, 0.1f);
-			ImGui::DragFloat3("segment.diff", &segment.diff.x, 0.1f, 0.1f);
 			ImGui::TreePop();
 		}
 

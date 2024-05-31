@@ -295,6 +295,56 @@ void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjection, const Matrix4x4
 	Novice::DrawLine(static_cast<int>(screenVertex[6].x),static_cast<int>(screenVertex[6].y),static_cast<int>(screenVertex[7].x),static_cast<int>(screenVertex[7].y),color);
 }
 
+void DrawOBB(const OBB& obb, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color) {
+	// 回転行列を作成する
+	Matrix4x4 rotateMatrix = obb.matRotate;
+	// 平行移動分を作成
+	Matrix4x4 matTranslate = MakeTranslateMatrix(obb.center);
+	// 拡縮分
+	Matrix4x4 matScale = MakeScaleMatrix({ 1.0f,1.0f, 1.0f });
+
+	// ワールド行列を求める
+	Matrix4x4 worldMat = matScale * rotateMatrix * matTranslate;
+
+	// 正射影行列を求める
+	Matrix4x4 vpvMat = Multiply(worldMat, viewProjection) * viewportMatrix;
+
+	// ローカルの頂点を求める
+	Vec3f localVertex[8];
+	Vec3f min = obb.size * -1;
+	Vec3f max = obb.size;
+	// 手前の面
+	localVertex[0] = min;
+	localVertex[1] = { min.x, max.y, min.z };
+	localVertex[2] = { max.x, max.y , min.z };
+	localVertex[3] = { max.x, min.y , min.z };
+	// 奥の面
+	localVertex[4] = { min.x, min.y, max.z };
+	localVertex[5] = { min.x, max.y, max.z };
+	localVertex[6] = { max.x, min.y, max.z };
+	localVertex[7] = max;
+
+	// スクリーンの頂点を求める
+	Vec3f screenVertex[8];
+	for (size_t index = 0; index < 8; index++) {
+		screenVertex[index] = Transform(localVertex[index], vpvMat);
+	}
+
+	// 描画
+	Novice::DrawLine(static_cast<int>(screenVertex[0].x), static_cast<int>(screenVertex[0].y), static_cast<int>(screenVertex[1].x), static_cast<int>(screenVertex[1].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[0].x), static_cast<int>(screenVertex[0].y), static_cast<int>(screenVertex[3].x), static_cast<int>(screenVertex[3].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[0].x), static_cast<int>(screenVertex[0].y), static_cast<int>(screenVertex[4].x), static_cast<int>(screenVertex[4].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[1].x), static_cast<int>(screenVertex[1].y), static_cast<int>(screenVertex[2].x), static_cast<int>(screenVertex[2].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[1].x), static_cast<int>(screenVertex[1].y), static_cast<int>(screenVertex[5].x), static_cast<int>(screenVertex[5].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[2].x), static_cast<int>(screenVertex[2].y), static_cast<int>(screenVertex[3].x), static_cast<int>(screenVertex[3].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[2].x), static_cast<int>(screenVertex[2].y), static_cast<int>(screenVertex[7].x), static_cast<int>(screenVertex[7].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[3].x), static_cast<int>(screenVertex[3].y), static_cast<int>(screenVertex[6].x), static_cast<int>(screenVertex[6].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[4].x), static_cast<int>(screenVertex[4].y), static_cast<int>(screenVertex[5].x), static_cast<int>(screenVertex[5].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[4].x), static_cast<int>(screenVertex[4].y), static_cast<int>(screenVertex[6].x), static_cast<int>(screenVertex[6].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[5].x), static_cast<int>(screenVertex[5].y), static_cast<int>(screenVertex[7].x), static_cast<int>(screenVertex[7].y), color);
+	Novice::DrawLine(static_cast<int>(screenVertex[6].x), static_cast<int>(screenVertex[6].y), static_cast<int>(screenVertex[7].x), static_cast<int>(screenVertex[7].y), color);
+}
+
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
@@ -302,3 +352,23 @@ void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label) {
 	Novice::ScreenPrintf(x + kColWidth * 2, y, "%.02f", vector.z);
 	Novice::ScreenPrintf(x + kColWidth * 3, y, "%s", label);
 }
+
+void OBB::MakeOBBAxis(const Vec3f& rotate) {
+	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(rotate.x), Multiply(MakeRotateYMatrix(rotate.y), MakeRotateYMatrix(rotate.z)));
+
+	// 回転行列から軸を抽出
+	orientations[0].x = rotateMatrix.m[0][0];
+	orientations[0].y = rotateMatrix.m[0][1];
+	orientations[0].z = rotateMatrix.m[0][2];
+
+	orientations[1].x = rotateMatrix.m[1][0];
+	orientations[1].y = rotateMatrix.m[1][1];
+	orientations[1].z = rotateMatrix.m[1][2];
+
+	orientations[2].x = rotateMatrix.m[2][0];
+	orientations[2].y = rotateMatrix.m[2][1];
+	orientations[2].z = rotateMatrix.m[2][2];
+
+	matRotate = rotateMatrix;
+}
+

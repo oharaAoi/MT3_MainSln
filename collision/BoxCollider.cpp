@@ -83,3 +83,33 @@ bool IsCollision(const AABB& aabb, const Segment& segment) {
 
 	return false;
 }
+
+/// <summary>/// 
+/// OBBと球の当たり判定
+/// </summary>///
+///  <param name="obb"></param>///
+/// <param name="sphere"></param>///
+///  <returns></returns>
+bool IsCollision(const OBB& obb, const Sphere& sphere) {
+	// 回転行列を作成する
+	Matrix4x4 rotateMatrix = obb.matRotate;
+	// 平行移動分を作成
+	Matrix4x4 matTranslate = MakeTranslateMatrix(obb.center);
+	// ワールド行列を作成
+	Matrix4x4 obbMatWorld = rotateMatrix * matTranslate;
+	Matrix4x4 obbMatWorldInverse = Inverse(obbMatWorld);
+
+	// 中心点を作成
+	Vec3f centerInOBBLocal = Transform(sphere.center, obbMatWorldInverse);
+
+	// OBBからABBを作成
+	AABB aabbOBBLocal{ .min = obb.size * -1, .max = obb.size };
+	Sphere sphereOBBLocal{ .center = centerInOBBLocal, .radius = sphere.radius, .color = sphere.color };
+
+	// ローカル空間で衝突判定
+	if (IsCollision(aabbOBBLocal, sphereOBBLocal)) {
+		return true;
+	}
+
+	return false;
+}
