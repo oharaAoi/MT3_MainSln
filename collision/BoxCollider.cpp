@@ -82,14 +82,15 @@ bool IsCollision(const AABB& aabb, const Segment& segment) {
 	float tmax = std::min(std::min(tFar.x, tFar.y), tFar.z);
 
 	if (tmin <= tmax) {
+		// (始点が)内部から外部
 		if (0 <= tmin && tmin <= 1) {
 			return true;
 		}
-
+		// (始点が)外部から内部
 		if (0 <= tmax && tmax <= 1) {
 			return true;
 		}
-
+		// 線分が内部にある
 		if (tmin <= 0 && tmax >= 1) {
 			return true;
 		}
