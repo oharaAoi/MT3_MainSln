@@ -36,7 +36,7 @@ void Camera::Update(){
 	// カメラの移動(x,y)
 	TransitionMove();
 	// カメラの移動(z)
-	ScrollMove();
+	//ScrollMove();
 	// 回転
 	if (debugCameraMode_) {
 		RotateMove();

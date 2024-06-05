@@ -118,6 +118,23 @@ public:
 		z /= obj;
 		return /this;
 	}*/
+
+	bool operator&&(const MyVector3& obj) const {
+		if (x == obj.x && y == obj.y && z == obj.z) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	bool operator||(const MyVector3& obj) const {
+		if (x == obj.x || y == obj.y || z == obj.z) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 };
 
 using Vec3f = MyVector3<float>;

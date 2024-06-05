@@ -6,7 +6,7 @@
 #include <cmath>
 
 static const int kRowHeight = 20;
-static const int kColWidth = 60;
+static const int kColWidth = 70;
 
 Vec3f AddMat(const Vec3f& v, const Matrix4x4& mat);
 

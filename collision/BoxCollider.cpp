@@ -2,7 +2,7 @@
 
 bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
 	if (aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) {
-		
+
 	} else {
 		return false;
 	}
@@ -47,6 +47,14 @@ bool IsCollision(const AABB& aabb, const Segment& segment) {
 	Vec3f tMin = (aabb.min - segment.origin) / segment.diff;
 	Vec3f tMax = (aabb.max - segment.origin) / segment.diff;
 
+	if (std::isnan(tMin.x)) {tMin.x = 0;}
+	if (std::isnan(tMin.y)) {tMin.y = 0;}
+	if (std::isnan(tMin.z)) {tMin.z = 0;}
+
+	if (std::isnan(tMax.x)) {tMax.x = 99;}
+	if (std::isnan(tMax.y)) {tMax.y = 99;}
+	if (std::isnan(tMax.z)) {tMax.z = 99;}
+
 	// 衝突点の内近い方と小さい方を求める
 	Vec3f tNear{
 		std::min(tMin.x, tMax.x),
@@ -66,6 +74,13 @@ bool IsCollision(const AABB& aabb, const Segment& segment) {
 	float tmin = std::max(std::max(tNear.x, tNear.y), tNear.z);
 	// 遠い方の小さい方を求める
 	float tmax = std::min(std::min(tFar.x, tFar.y), tFar.z);
+
+	Novice::ScreenPrintf(0, 0, "tmin:%f", tmin);
+	Novice::ScreenPrintf(0, 10, "tmax:%f", tmax);
+	VectorScreenPrintf(0, 30, tNear, "tNear");
+	VectorScreenPrintf(0, 60, tFar, "tFar");
+	VectorScreenPrintf(0, 90, tMin, "tMin");
+	VectorScreenPrintf(0, 110, tMax, "tMax");
 
 	if (tmin <= tmax) {
 		if (0 <= tmin && tmin <= 1) {

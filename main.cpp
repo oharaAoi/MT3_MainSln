@@ -28,7 +28,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ↓ 線分
 	// ---------------------------------------------------------------
 	Segment segment{
-		.origin{-0.7f, 0.3f, 0.0f},
+		.origin{-0.5f, 0.5f, -0.5f},
 		.diff{0.0f, 2.0f, 0.0f}
 	};
 
@@ -40,12 +40,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		.max{0.5f, 0.5f, 0.5f},
 	};
 	unsigned int color1 = WHITE;
-
-	Vec3f a = { -0.321f, 0.124f, 0.938f };
-	Vec3f b = { 0.493f, 0.248f, -0.833f };
-
-	float t = Dot(a, b);
-	t = 0;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {

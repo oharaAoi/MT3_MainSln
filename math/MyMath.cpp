@@ -186,3 +186,11 @@ Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat) {
 	result.z = mat.m[2][0] * direction.x + mat.m[2][1] * direction.y + mat.m[2][2] * direction.z;
 	return result;
 }
+
+bool CompareVector3And(const Vec3f& v1, const Vec3f& v2) {
+	if (v1.x == v2.x && v1.y == v2.y && v1.z == v2.z) {
+		return true;
+	}
+
+	return false;
+}
