@@ -29,3 +29,19 @@ bool IsCollision(const AABB& aabb, const Sphere& sphere);
 /// <param name="segment">線分</param>
 /// <returns>true: 当たっている false: 当たっていない</returns>
 bool IsCollision(const AABB& aabb, const Segment& segment);
+
+/// <summary>///
+/// 線分との当たり判定
+/// </summary>///
+/// <param name="aabb">箱</param>
+/// <param name="Ray">半直線</param>
+/// <returns>true: 当たっている false: 当たっていない</returns>
+bool IsCollision(const AABB& aabb, const Ray& ray);
+
+/// <summary>///
+/// 線分との当たり判定
+/// </summary>///
+/// <param name="aabb">箱</param>
+/// <param name="Line">直線</param>
+/// <returns>true: 当たっている false: 当たっていない</returns>
+bool IsCollision(const AABB& aabb, const Line& line);

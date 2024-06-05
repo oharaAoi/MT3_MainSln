@@ -32,6 +32,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		.diff{0.0f, 2.0f, 0.0f}
 	};
 
+	Ray ray{
+		.origin{-0.5f, 0.5f, -0.5f},
+		.diff{0.0f, 2.0f, 0.0f}
+	};
+
+	Line line{
+		.origin{-0.5f, 0.5f, -0.5f},
+		.diff{0.0f, 2.0f, 0.0f}
+	};
+
 	// ---------------------------------------------------------------
 	// ↓ AABB
 	// ---------------------------------------------------------------
@@ -77,7 +87,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// ------------------------ 当たり判定 ------------------------ //
 
-		if (IsCollision(aabb1, segment)) {
+		if (IsCollision(aabb1, line)) {
 			color1 = RED;
 		} else {
 			color1 = WHITE;
