@@ -29,7 +29,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	Vec3f rotate = { 45.0f, 0.0f, 0.0f };
 	OBB obb{
-		.center {-2.0f, 0.0f, 0.0f},
+		.center {-1.0f, 0.0f, 0.0f},
 		.orientations = {
 			{1.0f, 0.0f, 0.0f},
 			{0.0f, 1.0f, 0.0f},
@@ -45,12 +45,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ Sphere
 	// ---------------------------------------------------------------
-	Sphere sphere{
-		.center{0.0f, 0.0f, 0.0f},
-		.radius{0.5f},
-		.color{WHITE}
+	Segment segment{
+		.origin = {-0.8f, -0.3f, 0.0f},
+		.diff = {0.5f, 0.5f, 0.5f }
 	};
-
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -67,20 +65,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		// ------------------------ minとmaxが入れ替わらないように ------------------------ //
-		/*aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
-		aabb1.max.x = (std::max)(aabb1.min.x, aabb1.max.x);
-
-		aabb1.min.y = (std::min)(aabb1.min.y, aabb1.max.y);
-		aabb1.max.y = (std::max)(aabb1.min.y, aabb1.max.y);
-
-		aabb1.min.z = (std::min)(aabb1.min.z, aabb1.max.z);
-		aabb1.max.z = (std::max)(aabb1.min.z, aabb1.max.z);*/
+		// ------------------------ segmentの始点と終点を求める ------------------------ //
+		Vec3f start = segment.GetStartPoint(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		Vec3f end = segment.GetEndPoint(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
 		obb.MakeOBBAxis(rotate);
 
 		// ------------------------ 当たり判定 ------------------------ //
-		if (IsCollision(obb, sphere)) {
+		if (IsCollision(obb, segment)) {
 			obbColor = RED;
 		} else {
 			obbColor = WHITE;
@@ -100,13 +92,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawOBB(obb, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), obbColor);
 
-		DrawSphere(sphere, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
 
 		ImGui::Begin("Set");
 
 		if (ImGui::TreeNode("OBB")) {
 			ImGui::DragFloat3("obb.center", &obb.center.x, 0.1f, 0.1f);
 			ImGui::DragFloat3("rotate", &rotate.x, 1.0f);
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Segment")) {
+			ImGui::DragFloat3("start", &segment.origin.x, 0.1f, 0.1f);
+			ImGui::DragFloat3("end", &segment.diff.x, 1.0f);
 
 			ImGui::TreePop();
 		}

@@ -113,3 +113,33 @@ bool IsCollision(const OBB& obb, const Sphere& sphere) {
 
 	return false;
 }
+
+bool IsCollision(const OBB& obb, const Segment& segment) {
+	// 回転行列を作成する
+	Matrix4x4 rotateMatrix = obb.matRotate;
+	// 平行移動分を作成
+	Matrix4x4 matTranslate = MakeTranslateMatrix(obb.center);
+	// ワールド行列を作成
+	Matrix4x4 obbMatWorld = rotateMatrix * matTranslate;
+	// -M
+	Matrix4x4 obbMatWorldInverse = Inverse(obbMatWorld);
+
+	// 線分の始点と終点をAABBのローカル空間に変換する
+	Vec3f localOrigin = Transform(segment.origin, obbMatWorldInverse);
+	Vec3f localEnd = Transform(segment.origin + segment.diff, obbMatWorldInverse);
+
+	// OBBからABBを作成
+	AABB aabbOBBLocal{ .min = obb.size * -1, .max = obb.size };
+	// ローカルの線分を生成
+	Segment localSegment = {
+		.origin = localOrigin,
+		.diff = localEnd - localOrigin
+	};
+
+	// 当たり判定
+	if (IsCollision(aabbOBBLocal, localSegment)) {
+		return true;
+	}
+
+	return false;
+}
