@@ -45,3 +45,5 @@ bool IsCollision(const OBB& obb, const Sphere& sphere);
 ///  <param name="segment"></param>///
 ///  <returns></returns>
 bool IsCollision(const OBB& obb, const Segment& segment);
+bool IsCollision(const OBB& obb, const Ray& segment);
+bool IsCollision(const OBB& obb, const Line& segment);

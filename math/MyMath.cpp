@@ -1,5 +1,13 @@
 ﻿#include "MyMath.h"
 
+Vec3f GetStartPoint(const Vec3f& startPos, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
+	return Transform(Transform(startPos, viewProjectionMatrix), viewportMatrix);
+}
+
+Vec3f GetEndPoint(const Vec3f& endPos, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
+	return Transform(Transform(endPos, viewProjectionMatrix), viewportMatrix);
+}
+
 //=================================================================================================================
 //	↓　四則演算
 //=================================================================================================================
@@ -185,12 +193,4 @@ Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat) {
 	result.y = mat.m[1][0] * direction.x + mat.m[1][1] * direction.y + mat.m[1][2] * direction.z;
 	result.z = mat.m[2][0] * direction.x + mat.m[2][1] * direction.y + mat.m[2][2] * direction.z;
 	return result;
-}
-
-Vec3f Segment::GetStartPoint(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix) {
-	return Transform(Transform(origin, viewProjection), viewportMatrix);
-}
-
-Vec3f Segment::GetEndPoint(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix) {
-	return Transform(Transform(origin + diff , viewProjection), viewportMatrix);
 }
