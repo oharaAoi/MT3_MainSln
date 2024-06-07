@@ -33,6 +33,9 @@ struct Ray {
 struct Segment {
 	Vec3f origin;	// 始点
 	Vec3f diff;	// 終点への差分ベクトル
+
+	Vec3f GetStartPoint(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix);
+	Vec3f GetEndPoint(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix);
 };
 
 //=================================================================================================================

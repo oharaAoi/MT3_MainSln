@@ -186,3 +186,11 @@ Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat) {
 	result.z = mat.m[2][0] * direction.x + mat.m[2][1] * direction.y + mat.m[2][2] * direction.z;
 	return result;
 }
+
+Vec3f Segment::GetStartPoint(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix) {
+	return Transform(Transform(origin, viewProjection), viewportMatrix);
+}
+
+Vec3f Segment::GetEndPoint(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix) {
+	return Transform(Transform(origin + diff , viewProjection), viewportMatrix);
+}
