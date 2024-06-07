@@ -66,8 +66,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		camera_->Update();
 
 		// ------------------------ segmentの始点と終点を求める ------------------------ //
-		Vec3f start = segment.GetStartPoint(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
-		Vec3f end = segment.GetEndPoint(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		Vec3f start = GetStartPoint(segment.origin, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		Vec3f end = GetEndPoint(segment.origin + segment.diff, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
 		obb.MakeOBBAxis(rotate);
 
