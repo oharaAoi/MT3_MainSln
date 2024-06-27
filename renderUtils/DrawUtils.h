@@ -5,6 +5,7 @@
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <vector>
 
 struct Sphere {
 	Vec3f center;
@@ -43,9 +44,11 @@ struct OBB {
 	Vec3f orientations[3]; // 座標軸、正規化、直交必須
 	Vec3f size; // 座標軸方向の長さの半分
 
+	// 回転軸
 	Matrix4x4 matRotate;
-
+	
 	void MakeOBBAxis(const Vec3f& rotate);
+	std::vector<Vec3f> MakeIndex() const ;
 };
 
 /// <summary>

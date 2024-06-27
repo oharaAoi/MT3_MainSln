@@ -354,7 +354,7 @@ void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label) {
 }
 
 void OBB::MakeOBBAxis(const Vec3f& rotate) {
-	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(rotate.x), Multiply(MakeRotateYMatrix(rotate.y), MakeRotateYMatrix(rotate.z)));
+	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix(rotate.x), Multiply(MakeRotateYMatrix(rotate.y), MakeRotateZMatrix(rotate.z)));
 
 	// 回転行列から軸を抽出
 	orientations[0].x = rotateMatrix.m[0][0];
@@ -370,5 +370,25 @@ void OBB::MakeOBBAxis(const Vec3f& rotate) {
 	orientations[2].z = rotateMatrix.m[2][2];
 
 	matRotate = rotateMatrix;
+}
+
+std::vector<Vec3f> OBB::MakeIndex() const {
+	std::vector<Vec3f> vertices;
+	for (uint8_t x = 0; x < 2; ++x) {
+		for (uint8_t y = 0; y < 2; ++y) {
+			for (uint8_t z = 0; z < 2; ++z) {
+				Vec3f localVertex = {
+					(x ? size.x : -size.x),
+					(y ? size.y : -size.y),
+					(z ? size.z : -size.z),
+				};
+
+				Vec3f worldVertex = Transform(localVertex, matRotate);
+				vertices.push_back(worldVertex + center);
+			}
+		}
+	}
+
+	return vertices;
 }
 

@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ OBB
 	// ---------------------------------------------------------------
-	Vec3f rotate = { 45.0f, 0.0f, 0.0f };
+	Vec3f rotate = { 0.0f, 0.0f, 0.0f };
 	OBB obb{
 		.center {-1.0f, 0.0f, 0.0f},
 		.orientations = {
@@ -43,12 +43,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	uint32_t obbColor = WHITE;
 
 	// ---------------------------------------------------------------
-	// ↓ Sphere
+	// ↓ OBB2
 	// ---------------------------------------------------------------
-	Segment segment{
-		.origin = {-0.8f, -0.3f, 0.0f},
-		.diff = {0.5f, 0.5f, 0.5f }
+	Vec3f rotate2 = { -0.05f, -2.49f, 0.15f };
+	OBB obb2{
+		.center {0.9f, 0.66f, 0.78f},
+		.orientations = {
+			{1.0f, 0.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f},
+			{0.0f, 0.0f, 1.0f},
+		},
+		.size{0.5f, 0.37f, 0.5f}
 	};
+
+	obb2.MakeOBBAxis(rotate2);
+
+	uint32_t obbColor2 = WHITE;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -65,18 +75,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		// ------------------------ segmentの始点と終点を求める ------------------------ //
-		Vec3f start = GetStartPoint(segment.origin, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
-		Vec3f end = GetEndPoint(segment.origin + segment.diff, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		// ------------------------ OBBの回転要素を求める ------------------------ //
 
 		obb.MakeOBBAxis(rotate);
+		obb2.MakeOBBAxis(rotate2);
 
 		// ------------------------ 当たり判定 ------------------------ //
-		if (IsCollision(obb, segment)) {
-			obbColor = RED;
+
+		if (IsCollision(obb, obb2)) {
+			obbColor2 = RED;
 		} else {
-			obbColor = WHITE;
+			obbColor2 = WHITE;
 		}
+
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -91,23 +102,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
 		DrawOBB(obb, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), obbColor);
-
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
+		DrawOBB(obb2, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), obbColor2);
 
 		ImGui::Begin("Set");
 
-		if (ImGui::TreeNode("OBB")) {
+		if (ImGui::TreeNode("OBB1")) {
 			ImGui::DragFloat3("obb.center", &obb.center.x, 0.1f, 0.1f);
-			ImGui::DragFloat3("rotate", &rotate.x, 1.0f);
+			ImGui::DragFloat3("rotate", &rotate.x, 0.1f);
+			ImGui::DragFloat3("size", &obb.size.x, 0.1f);
+			ImGui::TreePop();
+		}
 
+		if (ImGui::TreeNode("OBB2")) {
+			ImGui::DragFloat3("obb.center", &obb2.center.x, 0.1f, 0.1f);
+			ImGui::DragFloat3("rotate", &rotate2.x, 0.1f);
+			ImGui::DragFloat3("size", &obb2.size.x, 0.1f);
 			ImGui::TreePop();
 		}
 
 		if (ImGui::TreeNode("Segment")) {
-			ImGui::DragFloat3("start", &segment.origin.x, 0.1f, 0.1f);
-			ImGui::DragFloat3("end", &segment.diff.x, 1.0f);
-
-			ImGui::TreePop();
+			
 		}
 
 		ImGui::End();
