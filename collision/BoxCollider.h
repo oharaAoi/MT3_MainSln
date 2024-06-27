@@ -5,6 +5,7 @@
 #undef min
 #undef max
 #include <algorithm>
+#include <list>
 
 /// <summary>
 /// 当たり判定
@@ -47,3 +48,8 @@ bool IsCollision(const OBB& obb, const Sphere& sphere);
 bool IsCollision(const OBB& obb, const Segment& segment);
 bool IsCollision(const OBB& obb, const Ray& segment);
 bool IsCollision(const OBB& obb, const Line& segment);
+
+//==================================================================
+// OBBとOBB
+//==================================================================
+bool IsCollision(const OBB& obb1, const OBB& obb2);
