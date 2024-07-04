@@ -28,37 +28,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	Vec3f translates[3] = {
-		{0.2f, 1.0f, 0.0f},
-		{0.4f, 0.0f, 0.0f},
-		{0.3f, 0.0f, 0.0f},
-	};
-
-	Vec3f rotates[3] = {
-		{0.0f, 0.0f, -6.8f},
-		{0.4f, 0.0f, -1.4f},
-		{0.3f, 0.0f, 0.0f},
-	};
-
-	Vec3f scales[3] = {
-		{1.0f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f},
-	};
-
-	Sphere sphere[3];
-	for (uint32_t oi = 0; oi < 3; oi++) {
-		// 色
-		int color[3] = { 0 };
-		color[oi] = 0xff;
-		unsigned int finalColor = (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | 0xff;
-
-		sphere[oi] = {
-			translates[oi],
-			0.08f,
-			finalColor
-		};
-	}
+	
+	Vec3f a{ 0.2f, 1.0f, 0.0f };
+	Vec3f b{ 2.4f, 3.1f, 1.2f };
+	Vec3f c = a + b;
+	Vec3f d = a - b;
+	Vec3f e = a * 2.4f;
+	Vec3f rotate{ 0.4f, 1.43f, -0.8f };
+	Matrix4x4 rotateXMat = MakeRotateXMatrix(rotate.x);
+	Matrix4x4 rotateYMat = MakeRotateYMatrix(rotate.y);
+	Matrix4x4 rotateZMat = MakeRotateZMatrix(rotate.z);
+	Matrix4x4 rotateMat = rotateXMat * rotateYMat * rotateZMat;
 
 	// ---------------------------------------------------------------
 	// ↓ 
@@ -81,23 +61,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// ------------------------  ------------------------ //
 
-		Matrix4x4 matShoulder = MakeAffineMatrix(scales[0], rotates[0], translates[0]);
-		Matrix4x4 matElbow = MakeAffineMatrix(scales[1], rotates[1], translates[1]) * matShoulder;
-		Matrix4x4 matHand = MakeAffineMatrix(scales[2], rotates[2], translates[2]) * matElbow;
-
-		sphere[0].center = { matShoulder.m[3][0],matShoulder.m[3][1], matShoulder.m[3][2] };
-		sphere[1].center = { matElbow.m[3][0],matElbow.m[3][1], matElbow.m[3][2] };
-		sphere[2].center = { matHand.m[3][0],matHand.m[3][1], matHand.m[3][2] };
-		
-		Matrix4x4 wvpShoulder = matShoulder * camera_->GetViewProjectMatrix() * camera_->GetViewportMatrix();
-		Matrix4x4 wvpElbow = matElbow * camera_->GetViewProjectMatrix() * camera_->GetViewportMatrix();
-		Matrix4x4 wvpHand = matHand * camera_->GetViewProjectMatrix() * camera_->GetViewportMatrix();
-
-		Vec3f screenPos[3] = {
-			Transform({0,0,0}, wvpShoulder),
-			Transform({0,0,0}, wvpElbow),
-			Transform({0,0,0}, wvpHand),
-		};
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -111,44 +74,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		for (uint32_t oi = 0; oi < 3; oi++) {
-			DrawSphere(sphere[oi], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
-		}
-
-		Novice::DrawLine(
-			static_cast<int>(screenPos[0].x),
-			static_cast<int>(screenPos[0].y),
-			static_cast<int>(screenPos[1].x),
-			static_cast<int>(screenPos[1].y),
-			WHITE
-		);
-
-		Novice::DrawLine(
-			static_cast<int>(screenPos[1].x),
-			static_cast<int>(screenPos[1].y),
-			static_cast<int>(screenPos[2].x),
-			static_cast<int>(screenPos[2].y),
-			WHITE
-		);
+		
 		
 		ImGui::Begin("Set");
 
-		if (ImGui::TreeNode("point")) {
-			for (uint32_t oi = 0; oi < 3; oi++) {
-				std::string num = std::to_string(oi);
-
-				std::string scaleLabel = "scale[" + num + "]";
-				ImGui::DragFloat3(scaleLabel.c_str(), &scales[oi].x, 0.01f);
-				// rotate
-				std::string rotateLabel = "rotate[" + num + "]";
-				ImGui::DragFloat3(rotateLabel.c_str(), &rotates[oi].x, 0.01f);
-				// translate
-				std::string translateLabel = "translate[" + num + "]";
-				ImGui::DragFloat3(translateLabel.c_str(), &translates[oi].x, 0.01f);
-				ImGui::Spacing();
-			}
+		if (ImGui::TreeNode("point")) {	
 			ImGui::TreePop();
 		}
+
+		ImGui::Text("c:%f, %f, %f", c.x, c.y, c.z);
+		ImGui::Text("d:%f, %f, %f", d.x, d.y, d.z);
+		ImGui::Text("e:%f, %f, %f", e.x, e.y, e.z);
+
+		ImGui::Text(
+			"matrix:\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f",
+			rotateMat.m[0][0], rotateMat.m[0][1], rotateMat.m[0][2],
+			rotateMat.m[0][3], rotateMat.m[1][0], rotateMat.m[1][1],
+			rotateMat.m[1][2], rotateMat.m[1][3], rotateMat.m[2][0],
+			rotateMat.m[2][1], rotateMat.m[2][2], rotateMat.m[2][3],
+			rotateMat.m[3][0], rotateMat.m[3][1], rotateMat.m[3][2],
+			rotateMat.m[3][3]
+		);
 
 		ImGui::End();
 
