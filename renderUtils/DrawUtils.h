@@ -112,8 +112,9 @@ void DrawOBB(const OBB& obb, const Matrix4x4& viewProjection, const Matrix4x4& v
 /// <param name="color">カラー</param>
 //void DrawBezier(const std::vector<Vec3f>& controlPoint, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, const uint32_t& color);
 
-
 void DrawBezier(const Vec3f& control0, const Vec3f& control1, const Vec3f& control2, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, const uint32_t& color);
+
+void DrawCatmullRom(const Vec3f& control0, const Vec3f& control1, const Vec3f& control2, const Vec3f& control3, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, const uint32_t& color);
 
 // 表示
 void VectorScreenPrintf(int x, int y, const Vec3f& vector, const char* label);

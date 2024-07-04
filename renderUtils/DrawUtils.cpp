@@ -356,8 +356,8 @@ void DrawOBB(const OBB& obb, const Matrix4x4& viewProjection, const Matrix4x4& v
 //}
 
 void DrawBezier(const Vec3f& control0, const Vec3f& control1, const Vec3f& control2, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, const uint32_t& color) {
-	const int division = 50;
-	for (uint32_t oi = 0; oi < division - 1; oi++) {
+	const int division = 30;
+	for (uint32_t oi = 0; oi < division ; oi++) {
 		float t = (float)oi / division;
 		float t2 = ((float)oi + 1) / division;
 
@@ -378,6 +378,49 @@ void DrawBezier(const Vec3f& control0, const Vec3f& control1, const Vec3f& contr
 		// 描画する
 		Matrix4x4 matWorld = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, p);
 		Matrix4x4 matWorld2 = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, p2);
+
+		// 正射影行列を求める
+		Matrix4x4 vpvMat = Multiply(matWorld, viewProjectionMat) * viewportMat;
+		Matrix4x4 vpvMat2 = Multiply(matWorld2, viewProjectionMat) * viewportMat;
+
+		// スクリーンの点を求める
+		Vec3f screenPos = Transform({ 0,0,0 }, vpvMat);
+		Vec3f screenPos2 = Transform({ 0,0,0 }, vpvMat2);
+
+		// 線を引く
+		Novice::DrawLine(
+			static_cast<int>(screenPos.x),
+			static_cast<int>(screenPos.y),
+			static_cast<int>(screenPos2.x),
+			static_cast<int>(screenPos2.y),
+			color
+		);
+	}
+}
+
+void DrawCatmullRom(const Vec3f& control0, const Vec3f& control1, const Vec3f& control2, const Vec3f& control3, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, const uint32_t& color) {
+	const int division = 30;
+	for (uint32_t oi = 0; oi < division; oi++) {
+		float t = (float)oi / division;
+		float t2 = ((float)oi + 1) / division;
+
+		Vec3f term1 = ((control0 * -1) + (control1 * 3) - (control2 * 3) + control3) * std::powf(t, 3);
+		Vec3f term2 = ((control0 * 2) - (control1 * 5) + (control2 * 4) - control3) * std::powf(t, 2);
+		Vec3f term3 = ((control0 * -1) + control2) * t;
+		Vec3f term4 = control1 * 2;
+
+		Vec3f point = (term1 + term2 + term3 + term4) * 0.5f;
+
+		term1 = ((control0 * -1) + (control1 * 3) - (control2 * 3) + control3) * std::powf(t2, 3);
+		term2 = ((control0 * 2) - (control1 * 5) + (control2 * 4) - control3) * std::powf(t2, 2);
+		term3 = ((control0 * -1) + control2) * t2;
+		term4 = control1 * 2;
+
+		Vec3f point2 = (term1 + term2 + term3 + term4) * 0.5f;
+
+		// 描画する
+		Matrix4x4 matWorld = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, point);
+		Matrix4x4 matWorld2 = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, point2);
 
 		// 正射影行列を求める
 		Matrix4x4 vpvMat = Multiply(matWorld, viewProjectionMat) * viewportMat;

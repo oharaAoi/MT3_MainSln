@@ -27,17 +27,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	Vec3f controlPoint[3] = {
+	Vec3f controlPoint[4] = {
 		{-0.8f, 0.58f, 1.0f},
 		{1.76f, 1.0f, -0.3f},
 		{0.94f, -0.7f, 2.3f},
+		{-0.53f, -0.26f, -0.15f},
 	};
 
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	Sphere sphere[3]{};
-	for (uint8_t oi = 0; oi < 3; oi++) {
+	Sphere sphere[4]{};
+	for (uint8_t oi = 0; oi < 4; oi++) {
 		sphere[oi] = {
 		controlPoint[oi],
 		0.05f,
@@ -84,9 +85,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawBezier(controlPoint[0], controlPoint[1], controlPoint[2], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
+		DrawCatmullRom(controlPoint[0], controlPoint[0], controlPoint[1], controlPoint[2], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
+		DrawCatmullRom(controlPoint[0], controlPoint[1], controlPoint[2], controlPoint[3], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
+		DrawCatmullRom(controlPoint[1], controlPoint[2], controlPoint[3], controlPoint[3], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
 
-		for (uint8_t oi = 0; oi < 3; oi++) {
+		for (uint8_t oi = 0; oi < 4; oi++) {
 			DrawSphere(sphere[oi], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		}
 		
@@ -96,6 +99,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::DragFloat3("point0", &controlPoint[0].x, 0.01f);
 			ImGui::DragFloat3("point1", &controlPoint[1].x, 0.01f);
 			ImGui::DragFloat3("point2", &controlPoint[2].x, 0.01f);
+			ImGui::DragFloat3("point3", &controlPoint[3].x, 0.01f);
 			ImGui::TreePop();									
 		}
 
