@@ -105,19 +105,19 @@ public:
 		return MyVector3(x / obj, y / obj, z / obj);
 	}
 
-	/*MyVector3 operator/=(const MyVector3& obj) {
+	MyVector3 operator/=(const MyVector3& obj) {
 		x /= obj.x;
 		y /= obj.y;
 		z /= obj.z;
-		return /this;
+		return *this;
 	}
 
 	MyVector3 operator/=(const float& obj) {
 		x /= obj;
 		y /= obj;
 		z /= obj;
-		return /this;
-	}*/
+		return *this;
+	}
 };
 
 using Vec3f = MyVector3<float>;
