@@ -4,6 +4,7 @@
 #include "DrawUtils.h"
 #include "Camera.h"
 #include <memory>
+#include <string>
 #include "SphereCollision.h"
 #include "LineCollider.h"
 #include "BoxCollider.h"
@@ -24,36 +25,44 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
 
-	const int pointNum = 4;
-
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	Vec3f controlPoint[4] = {
-		{-0.8f, 0.58f, 1.0f},
-		{1.76f, 1.0f, -0.3f},
-		{0.94f, -0.7f, 2.3f},
-		{-0.53f, -0.26f, -0.15f},
+	Vec3f translates[3] = {
+		{0.2f, 1.0f, 0.0f},
+		{0.4f, 0.0f, 0.0f},
+		{0.3f, 0.0f, 0.0f},
 	};
 
-	std::vector<Vec3f> controlPointArray_ = {
-		{-0.8f, 0.58f, 1.0f},
-		{1.76f, 1.0f, -0.3f},
-		{0.94f, -0.7f, 2.3f},
-		{-0.53f, -0.26f, -0.15f},
+	Vec3f rotates[3] = {
+		{0.0f, 0.0f, -6.8f},
+		{0.4f, 0.0f, -1.4f},
+		{0.3f, 0.0f, 0.0f},
 	};
 
-	// ---------------------------------------------------------------
-	// ↓ 
-	// ---------------------------------------------------------------
-	Sphere sphere[pointNum]{};
-	for (uint8_t oi = 0; oi < pointNum; oi++) {
+	Vec3f scales[3] = {
+		{1.0f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 1.0f},
+	};
+
+	Sphere sphere[3];
+	for (uint32_t oi = 0; oi < 3; oi++) {
+		// 色
+		int color[3] = { 0 };
+		color[oi] = 0xff;
+		unsigned int finalColor = (color[0] << 24) | (color[1] << 16) | (color[2] << 8) | 0xff;
+
 		sphere[oi] = {
-		controlPointArray_[oi],
-		0.05f,
-		BLACK
+			translates[oi],
+			0.08f,
+			finalColor
 		};
 	}
+
+	// ---------------------------------------------------------------
+	// ↓ 
+	// ---------------------------------------------------------------
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -70,17 +79,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		for (uint8_t oi = 0; oi < pointNum; oi++) {
-			sphere[oi] = {
-			controlPointArray_[oi],
-			0.05f,
-			BLACK
-			};
-		}
-
 		// ------------------------  ------------------------ //
 
-		// ------------------------ 当たり判定 ------------------------ //
+		Matrix4x4 matShoulder = MakeAffineMatrix(scales[0], rotates[0], translates[0]);
+		Matrix4x4 matElbow = MakeAffineMatrix(scales[1], rotates[1], translates[1]) * matShoulder;
+		Matrix4x4 matHand = MakeAffineMatrix(scales[2], rotates[2], translates[2]) * matElbow;
+
+		sphere[0].center = { matShoulder.m[3][0],matShoulder.m[3][1], matShoulder.m[3][2] };
+		sphere[1].center = { matElbow.m[3][0],matElbow.m[3][1], matElbow.m[3][2] };
+		sphere[2].center = { matHand.m[3][0],matHand.m[3][1], matHand.m[3][2] };
+		
+		Matrix4x4 wvpShoulder = matShoulder * camera_->GetViewProjectMatrix() * camera_->GetViewportMatrix();
+		Matrix4x4 wvpElbow = matElbow * camera_->GetViewProjectMatrix() * camera_->GetViewportMatrix();
+		Matrix4x4 wvpHand = matHand * camera_->GetViewProjectMatrix() * camera_->GetViewportMatrix();
+
+		Vec3f screenPos[3] = {
+			Transform({0,0,0}, wvpShoulder),
+			Transform({0,0,0}, wvpElbow),
+			Transform({0,0,0}, wvpHand),
+		};
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -94,24 +111,43 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		/*DrawCatmullRom(controlPoint[0], controlPoint[0], controlPoint[1], controlPoint[2], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
-		DrawCatmullRom(controlPoint[0], controlPoint[1], controlPoint[2], controlPoint[3], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
-		DrawCatmullRom(controlPoint[1], controlPoint[2], controlPoint[3], controlPoint[3], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);*/
-
-		DrawBezier(controlPointArray_, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
-
-		for (uint8_t oi = 0; oi < pointNum; oi++) {
+		for (uint32_t oi = 0; oi < 3; oi++) {
 			DrawSphere(sphere[oi], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		}
+
+		Novice::DrawLine(
+			static_cast<int>(screenPos[0].x),
+			static_cast<int>(screenPos[0].y),
+			static_cast<int>(screenPos[1].x),
+			static_cast<int>(screenPos[1].y),
+			WHITE
+		);
+
+		Novice::DrawLine(
+			static_cast<int>(screenPos[1].x),
+			static_cast<int>(screenPos[1].y),
+			static_cast<int>(screenPos[2].x),
+			static_cast<int>(screenPos[2].y),
+			WHITE
+		);
 		
 		ImGui::Begin("Set");
 
 		if (ImGui::TreeNode("point")) {
-			ImGui::DragFloat3("point0", &controlPointArray_[0].x, 0.01f);
-			ImGui::DragFloat3("point1", &controlPointArray_[1].x, 0.01f);
-			ImGui::DragFloat3("point2", &controlPointArray_[2].x, 0.01f);
-			ImGui::DragFloat3("point3", &controlPointArray_[3].x, 0.01f);
-			ImGui::TreePop();									
+			for (uint32_t oi = 0; oi < 3; oi++) {
+				std::string num = std::to_string(oi);
+
+				std::string scaleLabel = "scale[" + num + "]";
+				ImGui::DragFloat3(scaleLabel.c_str(), &scales[oi].x, 0.01f);
+				// rotate
+				std::string rotateLabel = "rotate[" + num + "]";
+				ImGui::DragFloat3(rotateLabel.c_str(), &rotates[oi].x, 0.01f);
+				// translate
+				std::string translateLabel = "translate[" + num + "]";
+				ImGui::DragFloat3(translateLabel.c_str(), &translates[oi].x, 0.01f);
+				ImGui::Spacing();
+			}
+			ImGui::TreePop();
 		}
 
 		ImGui::End();
