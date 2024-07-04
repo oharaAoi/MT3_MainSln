@@ -24,6 +24,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
 
+	const int pointNum = 4;
+
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
@@ -34,13 +36,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{-0.53f, -0.26f, -0.15f},
 	};
 
+	std::vector<Vec3f> controlPointArray_ = {
+		{-0.8f, 0.58f, 1.0f},
+		{1.76f, 1.0f, -0.3f},
+		{0.94f, -0.7f, 2.3f},
+		{-0.53f, -0.26f, -0.15f},
+	};
+
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	Sphere sphere[4]{};
-	for (uint8_t oi = 0; oi < 4; oi++) {
+	Sphere sphere[pointNum]{};
+	for (uint8_t oi = 0; oi < pointNum; oi++) {
 		sphere[oi] = {
-		controlPoint[oi],
+		controlPointArray_[oi],
 		0.05f,
 		BLACK
 		};
@@ -61,9 +70,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		for (uint8_t oi = 0; oi < 3; oi++) {
+		for (uint8_t oi = 0; oi < pointNum; oi++) {
 			sphere[oi] = {
-			controlPoint[oi],
+			controlPointArray_[oi],
 			0.05f,
 			BLACK
 			};
@@ -85,21 +94,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawCatmullRom(controlPoint[0], controlPoint[0], controlPoint[1], controlPoint[2], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
+		/*DrawCatmullRom(controlPoint[0], controlPoint[0], controlPoint[1], controlPoint[2], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
 		DrawCatmullRom(controlPoint[0], controlPoint[1], controlPoint[2], controlPoint[3], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
-		DrawCatmullRom(controlPoint[1], controlPoint[2], controlPoint[3], controlPoint[3], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
+		DrawCatmullRom(controlPoint[1], controlPoint[2], controlPoint[3], controlPoint[3], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);*/
 
-		for (uint8_t oi = 0; oi < 4; oi++) {
+		DrawBezier(controlPointArray_, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
+
+		for (uint8_t oi = 0; oi < pointNum; oi++) {
 			DrawSphere(sphere[oi], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		}
 		
 		ImGui::Begin("Set");
 
 		if (ImGui::TreeNode("point")) {
-			ImGui::DragFloat3("point0", &controlPoint[0].x, 0.01f);
-			ImGui::DragFloat3("point1", &controlPoint[1].x, 0.01f);
-			ImGui::DragFloat3("point2", &controlPoint[2].x, 0.01f);
-			ImGui::DragFloat3("point3", &controlPoint[3].x, 0.01f);
+			ImGui::DragFloat3("point0", &controlPointArray_[0].x, 0.01f);
+			ImGui::DragFloat3("point1", &controlPointArray_[1].x, 0.01f);
+			ImGui::DragFloat3("point2", &controlPointArray_[2].x, 0.01f);
+			ImGui::DragFloat3("point3", &controlPointArray_[3].x, 0.01f);
 			ImGui::TreePop();									
 		}
 

@@ -159,4 +159,4 @@ Vec3f Lerp(const Vec3f& p1, const Vec3f& p2, const float& t);
 /// </summary>
 ///  <param name="controlPoint">制御点がまとまった配列</param>
 ///  <returns></returns>
-//Vec3f Bezier(const std::vector<Vec3f>& controlPoint, const float& t);
+Vec3f Bezier(const std::vector<Vec3f>& controlPoint, const float& t);

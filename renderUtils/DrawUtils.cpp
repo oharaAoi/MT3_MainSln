@@ -398,6 +398,39 @@ void DrawBezier(const Vec3f& control0, const Vec3f& control1, const Vec3f& contr
 	}
 }
 
+void DrawBezier(std::vector<Vec3f> controlPoints, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, const uint32_t& color) {
+	const int division = 30;
+	for (uint32_t oi = 0; oi < division; oi++) {
+		float t = (float)oi / division;
+		float t2 = ((float)oi + 1) / division;
+
+		Vec3f p = Bezier(controlPoints, t);
+
+		Vec3f p2 = Bezier(controlPoints, t2);
+
+		// 描画する
+		Matrix4x4 matWorld = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, p);
+		Matrix4x4 matWorld2 = MakeAffineMatrix({ 1.0f,1.0f, 1.0f }, { 0,0,0 }, p2);
+
+		// 正射影行列を求める
+		Matrix4x4 vpvMat = Multiply(matWorld, viewProjectionMat) * viewportMat;
+		Matrix4x4 vpvMat2 = Multiply(matWorld2, viewProjectionMat) * viewportMat;
+
+		// スクリーンの点を求める
+		Vec3f screenPos = Transform({ 0,0,0 }, vpvMat);
+		Vec3f screenPos2 = Transform({ 0,0,0 }, vpvMat2);
+
+		// 線を引く
+		Novice::DrawLine(
+			static_cast<int>(screenPos.x),
+			static_cast<int>(screenPos.y),
+			static_cast<int>(screenPos2.x),
+			static_cast<int>(screenPos2.y),
+			color
+		);
+	}
+}
+
 void DrawCatmullRom(const Vec3f& control0, const Vec3f& control1, const Vec3f& control2, const Vec3f& control3, const Matrix4x4& viewProjectionMat, const Matrix4x4& viewportMat, const uint32_t& color) {
 	const int division = 30;
 	for (uint32_t oi = 0; oi < division; oi++) {

@@ -205,33 +205,16 @@ Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat) {
 Vec3f Lerp(const Vec3f& p1, const Vec3f& p2, const float& t) {
 	return (p2 - p1) * t + p1;
 }
-//
-//Vec3f Bezier(const std::vector<Vec3f>& controlPoint, const float& t) {
-//	Vec3f result;
-//
-//	std::vector<Vec3f> lerpVector;
-//	for (uint8_t index = 0; index < controlPoint.size() - 1; index++) {
-//		// 制御点p0,p1を線形補完
-//		Vec3f p = Lerp(controlPoint[index], controlPoint[index + 1], t);
-//		
-//		lerpVector.push_back(p);
-//	}
-//
-//	std::vector<Vec3f> lerpVector2;
-//	for (uint8_t index = 0; index < lerpVector.size() - 1; index++) {
-//		// 制御点p0,p1を線形補完
-//		Vec3f p = Lerp(lerpVector[index], lerpVector[index + 1], t);
-//
-//		lerpVector2.push_back(p);
-//	}
-//
-//	std::vector<Vec3f> finalLerp;
-//	while (finalLerp.size() > 2) {
-//		std::vector<Vec3f> lerp;
-//		for (uint8_t index = 0; index < lerpVector.size(); index += 2) {
-//
-//		}
-//	}
-//
-//	return result;
-//}
+
+Vec3f Bezier(const std::vector<Vec3f>& controlPoint, const float& t) {
+	if (controlPoint.size() == 1) {
+		return controlPoint[0];
+	}
+
+	std::vector<Vec3f> lerpVec;
+	for (size_t i = 0; i < controlPoint.size() - 1; ++i) {
+		lerpVec.push_back(Lerp(controlPoint[i], controlPoint[i + 1], t));
+	}
+
+	return Bezier(lerpVec, t);
+}
