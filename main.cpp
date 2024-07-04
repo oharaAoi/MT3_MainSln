@@ -27,12 +27,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	
+	Vec3f controlPoint[3] = {
+		{-0.8f, 0.58f, 1.0f},
+		{1.76f, 1.0f, -0.3f},
+		{0.94f, -0.7f, 2.3f},
+	};
 
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-
+	Sphere sphere[3]{};
+	for (uint8_t oi = 0; oi < 3; oi++) {
+		sphere[oi] = {
+		controlPoint[oi],
+		0.05f,
+		BLACK
+		};
+	}
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -48,6 +59,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///------------------///
 
 		camera_->Update();
+
+		for (uint8_t oi = 0; oi < 3; oi++) {
+			sphere[oi] = {
+			controlPoint[oi],
+			0.05f,
+			BLACK
+			};
+		}
 
 		// ------------------------  ------------------------ //
 
@@ -65,17 +84,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
+		DrawBezier(controlPoint[0], controlPoint[1], controlPoint[2], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
+
+		for (uint8_t oi = 0; oi < 3; oi++) {
+			DrawSphere(sphere[oi], camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		}
 		
 		ImGui::Begin("Set");
 
-		if (ImGui::TreeNode("OBB1")) {
-		
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("OBB2")) {
-			
-			ImGui::TreePop();
+		if (ImGui::TreeNode("point")) {
+			ImGui::DragFloat3("point0", &controlPoint[0].x, 0.01f);
+			ImGui::DragFloat3("point1", &controlPoint[1].x, 0.01f);
+			ImGui::DragFloat3("point2", &controlPoint[2].x, 0.01f);
+			ImGui::TreePop();									
 		}
 
 		ImGui::End();

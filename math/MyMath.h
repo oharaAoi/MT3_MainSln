@@ -7,6 +7,7 @@
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <vector>
 
 //=================================================================================================================
 //	↓	構造体
@@ -130,7 +131,6 @@ Vec3f Perpendicular(const Vec3f& vector);
 /// <returns></returns>
 Vec3f ClosestPoint(const Vec3f& point, const Segment& segment);
 
-
 /// <summary>
 /// ベクトル変換
 /// </summary>
@@ -140,3 +140,23 @@ Vec3f ClosestPoint(const Vec3f& point, const Segment& segment);
 Vec3f TransformNormal(const Vec3f& v, const Matrix4x4& m);
 
 Vec3f ApplyRotation(const Vec3f& direction, const Matrix4x4& mat);
+
+//=================================================================================================================
+//	↓ 曲線
+//=================================================================================================================
+
+/// <summary>
+/// 線形補完
+/// </summary>
+/// <param name="p1">制御点1</param>
+/// <param name="p2">制御点2</param>
+/// <param name="t">時間</param>
+/// <returns>p1をp2までにt時間分進めた値</returns>
+Vec3f Lerp(const Vec3f& p1, const Vec3f& p2, const float& t);
+
+/// <summary>
+/// ベジエ曲線を書く
+/// </summary>
+///  <param name="controlPoint">制御点がまとまった配列</param>
+///  <returns></returns>
+//Vec3f Bezier(const std::vector<Vec3f>& controlPoint, const float& t);
