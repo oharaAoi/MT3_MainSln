@@ -29,16 +29,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ↓ 
 	// ---------------------------------------------------------------
 	
-	Vec3f a{ 0.2f, 1.0f, 0.0f };
-	Vec3f b{ 2.4f, 3.1f, 1.2f };
-	Vec3f c = a + b;
-	Vec3f d = a - b;
-	Vec3f e = a * 2.4f;
-	Vec3f rotate{ 0.4f, 1.43f, -0.8f };
-	Matrix4x4 rotateXMat = MakeRotateXMatrix(rotate.x);
-	Matrix4x4 rotateYMat = MakeRotateYMatrix(rotate.y);
-	Matrix4x4 rotateZMat = MakeRotateZMatrix(rotate.z);
-	Matrix4x4 rotateMat = rotateXMat * rotateYMat * rotateZMat;
+
 
 	// ---------------------------------------------------------------
 	// ↓ 
@@ -73,28 +64,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		camera_->Draw();
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
-
-		
 		
 		ImGui::Begin("Set");
 
 		if (ImGui::TreeNode("point")) {	
 			ImGui::TreePop();
 		}
-
-		ImGui::Text("c:%f, %f, %f", c.x, c.y, c.z);
-		ImGui::Text("d:%f, %f, %f", d.x, d.y, d.z);
-		ImGui::Text("e:%f, %f, %f", e.x, e.y, e.z);
-
-		ImGui::Text(
-			"matrix:\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f",
-			rotateMat.m[0][0], rotateMat.m[0][1], rotateMat.m[0][2],
-			rotateMat.m[0][3], rotateMat.m[1][0], rotateMat.m[1][1],
-			rotateMat.m[1][2], rotateMat.m[1][3], rotateMat.m[2][0],
-			rotateMat.m[2][1], rotateMat.m[2][2], rotateMat.m[2][3],
-			rotateMat.m[3][0], rotateMat.m[3][1], rotateMat.m[3][2],
-			rotateMat.m[3][3]
-		);
 
 		ImGui::End();
 
