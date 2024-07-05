@@ -8,6 +8,7 @@
 #include "SphereCollision.h"
 #include "LineCollider.h"
 #include "BoxCollider.h"
+#include "MathStructures.h"
 
 const char kWindowTitle[] = "LE2A_06_オオハラアオイ";
 
@@ -28,12 +29,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	
-
+	Spring spring;
+	spring.anchor = { 0.0f, 0.0f, 0.0f };
+	spring.naturalLength = 1.0f;
+	spring.stiffness = 100.0f;
+	spring.dampingCoefficient = 2.0f;
 
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
+	Ball ball{};
+	ball.pos = { 1.2f, 0.0f, 0.0f };
+	ball.mass = 2.0f;
+	ball.radius = 0.05f;
+	ball.color = BLUE;
+
+	float deltaTime = 1.0f / 60.0f;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -50,8 +61,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		// ------------------------  ------------------------ //
+		// ------------------------ ばねの実装 ------------------------ //
+		Vec3f diff = ball.pos - spring.anchor;
+		float length = Length(diff);
 
+		if (length != 0.0f) {
+			Vec3f direction = Normalize(diff);
+			Vec3f restPos = spring.anchor + direction * spring.naturalLength;
+			Vec3f displacement = (ball.pos - restPos) * length;
+			Vec3f restoringForce = displacement * -spring.stiffness;
+			// 減衰を計算
+			Vec3f dampingForce = ball.velocity * -spring.dampingCoefficient;
+			Vec3f force = restoringForce + dampingForce;
+			ball.acceleration = force / ball.mass;
+		}
+
+		// 加速度も速度も秒基準
+		ball.velocity += ball.acceleration * deltaTime;
+		ball.pos += ball.velocity * deltaTime;
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -64,8 +91,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		camera_->Draw();
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+
+		ball.Draw(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+
+		DrawWorldLine(spring.anchor, ball.pos, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		
 		ImGui::Begin("Set");
+
+		if (ImGui::Button("Start")) {
+			ball.pos = { 1.2f, 0.0f, 0.0f };
+		}
 
 		if (ImGui::TreeNode("point")) {	
 			ImGui::TreePop();

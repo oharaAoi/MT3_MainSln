@@ -120,6 +120,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClCompile Include="collision\LineCollider.cpp" />
     <ClCompile Include="collision\SphereCollision.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MathStructures.cpp" />
     <ClCompile Include="math\MyMath.cpp" />
     <ClCompile Include="math\MyMatrix4x4.cpp" />
     <ClCompile Include="math\MyVector2.cpp" />
@@ -159,6 +160,7 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="collision\LineCollider.h" />
     <ClInclude Include="collision\SphereCollision.h" />
     <ClInclude Include="Environment.h" />
+    <ClInclude Include="MathStructures.h" />
     <ClInclude Include="math\MyMath.h" />
     <ClInclude Include="math\MyMatrix4x4.h" />
     <ClInclude Include="math\MyVector2.h" />

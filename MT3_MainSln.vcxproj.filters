@@ -77,6 +77,9 @@
     <ClCompile Include="collision\SphereCollision.cpp">
       <Filter>collider</Filter>
     </ClCompile>
+    <ClCompile Include="MathStructures.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -176,5 +179,6 @@
     <ClInclude Include="collision\SphereCollision.h">
       <Filter>collider</Filter>
     </ClInclude>
+    <ClInclude Include="MathStructures.h" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,24 @@
 ﻿#include "DrawUtils.h"
 
+void DrawWorldLine(const Vec3f& startWorldPos, const Vec3f& endWorldPos, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewMatrix) {
+	Matrix4x4 stWorldMat = MakeAffineMatrix({ 1.0f, 1.0f,1.0f }, { 0.0f, 0.0f, 0.0f }, { startWorldPos });
+	Matrix4x4 endWorldMat = MakeAffineMatrix({ 1.0f, 1.0f,1.0f }, { 0.0f, 0.0f, 0.0f }, { endWorldPos });
+
+	Matrix4x4 stWVP = stWorldMat * viewProjectionMatrix * viewMatrix;
+	Matrix4x4 endWVP = endWorldMat * viewProjectionMatrix * viewMatrix;
+
+	Vec3f stScreenPos = Transform({ 0.0f, 0.0f, 0.0f }, stWVP);
+	Vec3f endScreenPos = Transform({ 0.0f, 0.0f, 0.0f }, endWVP);
+
+	Novice::DrawLine(
+		static_cast<int>(stScreenPos.x),
+		static_cast<int>(stScreenPos.y),
+		static_cast<int>(endScreenPos.x),
+		static_cast<int>(endScreenPos.y),
+		WHITE
+	);
+}
+
 void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix) {
 	const float kGridHalfwidth_ = 2.0f;
 	const uint32_t kSubdivision_ = 10;
