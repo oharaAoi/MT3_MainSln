@@ -29,20 +29,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	
-	// ---------------------------------------------------------------
-	// ↓ 
-	// ---------------------------------------------------------------
 	Ball ball{};
 	ball.pos = { 1.0f, 0.0f, 0.0f };
 	ball.mass = 2.0f;
 	ball.radius = 0.05f;
 	ball.color = WHITE;
 
+	// ---------------------------------------------------------------
+	// ↓ 
+	// ---------------------------------------------------------------
+	Pendulum pendulum;
+	pendulum.anchor = { 0.0f, 1.0f, 0.0f };
+	pendulum.length = 0.8f;
+	pendulum.angle = 0.7f;
+	pendulum.angularVelocity = 0.0f;
+	pendulum.angularAcceleration = 0.0f;
+	pendulum.tipCenter = ball.pos;
+
 	float deltaTime = 1.0f / 60.0f;
-	float moveRadius = 0.8f;
-	float anglerVelocity = 3.14f;
-	float angle = 0.0f;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -59,12 +63,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		camera_->Update();
 
-		// ------------------------ 角速度を求める ------------------------ //
-		angle += anglerVelocity * deltaTime;
+		// ------------------------ 振り子の角度を求める ------------------------ //
+		pendulum.angularAcceleration = -(9.8f / pendulum.length) * std::sin(pendulum.angle);
+		pendulum.angularVelocity += pendulum.angularAcceleration * deltaTime;
+		pendulum.angle += pendulum.angularVelocity * deltaTime;
 
-		ball.pos.x = std::cos(angle) * moveRadius;
-		ball.pos.y = std::sin(angle) * moveRadius;
-		ball.pos.z = 0;
+		// ------------------------ 先端の位置を求める ------------------------ //
+		ball.pos.x = pendulum.anchor.x + std::sin(pendulum.angle) * pendulum.length;
+		ball.pos.y = pendulum.anchor.y - std::cos(pendulum.angle) * pendulum.length;
+		ball.pos.z = pendulum.anchor.z;
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -78,14 +85,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
+		DrawWorldLine(pendulum.anchor, ball.pos, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+
 		ball.Draw(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		
 		ImGui::Begin("Set");
-
-		if (ImGui::Button("Start")) {
-			ball.pos = { 1.0f, 0.0f, 0.0f };
-			angle = 0.0f;
-		}
 
 		if (ImGui::TreeNode("point")) {	
 			ImGui::TreePop();

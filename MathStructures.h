@@ -23,3 +23,12 @@ struct Ball {
 	void Draw(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix);
 };
 
+struct Pendulum {
+	Vec3f anchor; // アンカーポイント
+	float length; // 紐の長さ
+	float angle;  // 現在の角度
+	float angularVelocity; // 角速度
+	float angularAcceleration; // 角加速度
+	Vec3f tipCenter; // 先端の位置
+};
+
