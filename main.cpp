@@ -38,13 +38,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
-	Pendulum pendulum;
-	pendulum.anchor = { 0.0f, 1.0f, 0.0f };
-	pendulum.length = 0.8f;
-	pendulum.angle = 0.7f;
-	pendulum.angularVelocity = 0.0f;
-	pendulum.angularAcceleration = 0.0f;
-	pendulum.tipCenter = ball.pos;
+	ConicalPendulum conicalPendulum;
+	conicalPendulum.anchor = { 0.0f, 1.0f, 0.0f };
+	conicalPendulum.length = 0.8f;
+	conicalPendulum.halfApexAngle = 0.7f;
+	conicalPendulum.angle = 0.0f;
+	conicalPendulum.angularVelocity = 0.0f;
 
 	float deltaTime = 1.0f / 60.0f;
 
@@ -64,14 +63,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		camera_->Update();
 
 		// ------------------------ 振り子の角度を求める ------------------------ //
-		pendulum.angularAcceleration = -(9.8f / pendulum.length) * std::sin(pendulum.angle);
-		pendulum.angularVelocity += pendulum.angularAcceleration * deltaTime;
-		pendulum.angle += pendulum.angularVelocity * deltaTime;
+		conicalPendulum.angularVelocity = std::sqrt(9.8f / (conicalPendulum.length * std::cos(conicalPendulum.halfApexAngle)));
+		conicalPendulum.angle += conicalPendulum.angularVelocity * deltaTime;
 
 		// ------------------------ 先端の位置を求める ------------------------ //
-		ball.pos.x = pendulum.anchor.x + std::sin(pendulum.angle) * pendulum.length;
-		ball.pos.y = pendulum.anchor.y - std::cos(pendulum.angle) * pendulum.length;
-		ball.pos.z = pendulum.anchor.z;
+		float radius = std::sin(conicalPendulum.halfApexAngle) * conicalPendulum.length;
+		float height = std::cos(conicalPendulum.halfApexAngle) * conicalPendulum.length;
+
+		ball.pos.x = conicalPendulum.anchor.x + std::cos(conicalPendulum.angle) * radius;
+		ball.pos.y = conicalPendulum.anchor.y - height;
+		ball.pos.z = conicalPendulum.anchor.z - std::sin(conicalPendulum.angle) * radius;
 
 		///------------------///
 		/// ↑更新処理ここまで
@@ -85,7 +86,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
-		DrawWorldLine(pendulum.anchor, ball.pos, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		DrawWorldLine(conicalPendulum.anchor, ball.pos, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
 		ball.Draw(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		

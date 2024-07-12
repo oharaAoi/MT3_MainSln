@@ -23,6 +23,7 @@ struct Ball {
 	void Draw(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix);
 };
 
+// 振り子
 struct Pendulum {
 	Vec3f anchor; // アンカーポイント
 	float length; // 紐の長さ
@@ -32,3 +33,11 @@ struct Pendulum {
 	Vec3f tipCenter; // 先端の位置
 };
 
+// 円錐振り子
+struct ConicalPendulum {
+	Vec3f anchor; // アンカーポイント
+	float length; // 紐の長さ
+	float halfApexAngle; // 円錐の頂角の半分
+	float angle; // 現在の角度
+	float angularVelocity; // 角加速度
+};
