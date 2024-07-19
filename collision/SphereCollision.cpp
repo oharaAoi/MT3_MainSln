@@ -35,3 +35,59 @@ bool IsCollision(const Sphere& s1, const Plane& p1) {
 
     return false;
 }
+
+bool IsCollisionCapsule(const Ball& ball, const Plane& p1) {
+    Capsule capsule = CreateCapsule(ball);
+    
+    //// カプセルの始点と平面の内積をとる
+    //float dot1 = Dot(capsule.segment.origin, p1.normal);
+    //// 終点
+    //float dot2 = Dot(capsule.segment.origin + capsule.segment.diff, p1.normal);
+
+    //float distance = std::abs(dot1 - p1.distance);
+
+    //if (dot1 > 0.0f && dot2 < 0.0f) {
+    //    return true;
+    //} else if (dot1 < 0.0f && dot2 > 0.0f) {
+    //    return true;
+    //}
+
+    //if (distance <= ball.radius) {
+    //    return true;
+    //}
+
+    if (IsCollision(capsule.segment, p1)) {
+        return true;
+    }
+
+    return false;
+}
+
+Vec3f BackBall(const Ball& ball, const Plane& p1) {
+    Capsule capsule = CreateCapsule(ball);
+    // 始点から終点の位置
+    Vec3f endPos = capsule.segment.origin + capsule.segment.diff;
+    float capsuleDistance = Length(endPos - capsule.segment.origin);
+
+    // カプセルの始点と平面の内積をとる
+    float dot1 = Dot(capsule.segment.origin, p1.normal);
+    // 終点
+    float dot2 = Dot(endPos, p1.normal);
+
+    // 平面と球の中心点の距離を求める
+    float distance = 0;
+    if (dot1 > 0.0f && dot2 < 0.0f) {
+        distance = std::abs(dot1 - p1.distance);
+    } else if (dot1 < 0.0f && dot2 > 0.0f) {
+        distance = std::abs(dot2 - p1.distance);
+    }
+
+    distance = (dot1 - p1.distance);
+
+    // 戻す長さ
+    float backLength = (capsuleDistance - distance + ball.radius);
+    //戻す方向
+    Vec3f dire = Normalize(capsule.segment.origin - endPos);
+
+    return endPos + ((dire * backLength));
+}

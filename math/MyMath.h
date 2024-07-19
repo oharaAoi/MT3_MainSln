@@ -3,7 +3,7 @@
 #include "MyVector3.h"
 #include "Vector4.h"
 #include "MyMatrix4x4.h"
-
+#include "MathStructures.h"
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -35,6 +35,56 @@ struct Segment {
 	Vec3f origin;	// 始点
 	Vec3f diff;	// 終点への差分ベクトル
 };
+
+struct Sphere {
+	Vec3f center;
+	float radius;
+	uint32_t color;
+};
+
+struct Capsule {
+	Segment segment;
+	float radius;
+};
+
+/// <summary>
+/// 平面
+/// </summary>
+struct Plane {
+	Vec3f normal;	// 法線
+	float distance;	// 距離
+};
+
+/// <summary>
+/// 三角形
+/// </summary>
+struct Triangle {
+	Vec3f vertices[3];
+};
+
+/// <summary>
+/// AABB(軸平行境界箱)
+/// </summary>
+struct AABB {
+	Vec3f min;
+	Vec3f max;
+};
+
+/// <summary>
+/// OBB(有向境界箱)
+/// </summary>
+struct OBB {
+	Vec3f center; // 中心点
+	Vec3f orientations[3]; // 座標軸、正規化、直交必須
+	Vec3f size; // 座標軸方向の長さの半分
+
+	// 回転軸
+	Matrix4x4 matRotate;
+
+	void MakeOBBAxis(const Vec3f& rotate);
+	std::vector<Vec3f> MakeIndex() const;
+};
+
 
 Vec3f GetStartPoint(const Vec3f& startPos, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
 Vec3f GetEndPoint(const Vec3f& endPos, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
@@ -162,5 +212,6 @@ Vec3f Bezier(const std::vector<Vec3f>& controlPoint, const float& t);
 //=================================================================================================================
 //	↓ 反射
 //=================================================================================================================
-
 Vec3f Reflect(const Vec3f& input, const Vec3f& normal);
+
+Capsule CreateCapsule(const Ball& ball);

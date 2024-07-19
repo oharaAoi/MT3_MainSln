@@ -26,27 +26,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
 
+	Vec3f startPos = { 0.8f, 1.2f, 0.3f };
+
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
 	Ball ball{};
-	ball.pos = { 0.8f, 1.2f, -0.3f };
+	ball.pos = startPos;
 	ball.mass = 2.0f;
 	ball.radius = 0.05f;
 	ball.color = WHITE;
 	ball.acceleration = { 0.0f, -9.8f, 0.0f };
 	ball.velocity = { 0.0f, 0.0f, 0.0f };
 
+	Ball nextBall{};
+	nextBall.pos = { 0.8f, 1.2f, 0.3f };
+	nextBall.mass = 2.0f;
+	nextBall.radius = 0.05f;
+	nextBall.color = RED;
+	nextBall.acceleration = { 0.0f, -9.8f, 0.0f };
+	nextBall.velocity = { 0.0f, 0.0f, 0.0f };
+
 	// ---------------------------------------------------------------
 	// ↓ 
 	// ---------------------------------------------------------------
 
 	Plane plane{};
-	plane.normal = Normalize({ -0.2f, 0.9f, -0.3f });
+	plane.normal = Normalize({ -0.2f, 1.2f, -0.3f });
 	plane.distance = 0.0f;
 
 	float deltaTime = 1.0f / 60.0f;
-	float e = 0.8f;
+	float e = 0.2f;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -67,9 +77,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ball.velocity += ball.acceleration * deltaTime;
 		ball.pos += ball.velocity * deltaTime;
 
+		nextBall.pos = ball.pos;
+		nextBall.velocity = ball.velocity + (ball.acceleration * deltaTime);
+		nextBall.pos += ball.velocity * deltaTime;
+
 		// ------------------------ 反射させる ------------------------ //
 
-		if (IsCollision(Sphere(ball.pos, ball.radius), plane)) {
+		/*if (IsCollision(Sphere(ball.pos, ball.radius), plane)) {
+			Vec3f reflected = Reflect(ball.velocity, plane.normal);
+			Vec3f projectToNormal = Project(reflected, plane.normal);
+			Vec3f movingDire = reflected - projectToNormal;
+			ball.velocity = projectToNormal * e + movingDire;
+		}*/
+
+		if (IsCollisionCapsule(ball, plane)) {
+			ball.pos = BackBall(ball, plane);
 			Vec3f reflected = Reflect(ball.velocity, plane.normal);
 			Vec3f projectToNormal = Project(reflected, plane.normal);
 			Vec3f movingDire = reflected - projectToNormal;
@@ -77,12 +99,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		// 画面外に消えたら
-		if (ball.pos.y <= -1.5f) {
-			ball.pos = { 0.8f, 1.2f, -0.3f };
+		if (ball.pos.y <= -3.5f) {
+			ball.pos = startPos;
 			ball.acceleration = { 0.0f, -9.8f, 0.0f };
 			ball.velocity = { 0.0f, 0.0f, 0.0f };
 		}
-	
+
+
 		///------------------///
 		/// ↑更新処理ここまで
 		///------------------///
@@ -97,16 +120,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
 
-		ball.Draw(camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		DrawBall(ball, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		DrawBall(nextBall, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		
 		ImGui::Begin("Set");
 
 		if (ImGui::TreeNode("point")) {	
 			if (ImGui::Button("Reset")) {
-				ball.pos = { 0.8f, 1.2f, -0.3f };
+				ball.pos = startPos;
 				ball.acceleration = { 0.0f, -9.8f, 0.0f };
 				ball.velocity = { 0.0f, 0.0f, 0.0f };
 			}
+
+			ImGui::DragFloat3("startPos", &startPos.x, 0.1f);
 
 			ImGui::DragFloat("coefficient", &e, 0.01f, 0.0f, 1.0f);
 			ImGui::TreePop();

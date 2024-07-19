@@ -185,6 +185,15 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 	}
 }
 
+void DrawBall(const Ball& ball, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix) {
+	Sphere sphere{};
+	sphere.center = ball.pos;
+	sphere.radius = ball.radius;
+	sphere.color = ball.color;
+
+	DrawSphere(sphere, viewProjectionMatrix, viewportMatrix);
+}
+
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color) {
 	// 中心点を決める
 	Vec3f center = plane.normal * plane.distance;

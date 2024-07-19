@@ -7,50 +7,6 @@
 #include <math.h>
 #include <vector>
 
-struct Sphere {
-	Vec3f center;
-	float radius;
-	uint32_t color;
-};
-
-/// <summary>
-/// 平面
-/// </summary>
-struct Plane {
-	Vec3f normal;	// 法線
-	float distance;	// 距離
-};
-
-/// <summary>
-/// 三角形
-/// </summary>
-struct Triangle {
-	Vec3f vertices[3];
-};
-
-/// <summary>
-/// AABB(軸平行境界箱)
-/// </summary>
-struct AABB {
-	Vec3f min;
-	Vec3f max;
-};
-
-/// <summary>
-/// OBB(有向境界箱)
-/// </summary>
-struct OBB {
-	Vec3f center; // 中心点
-	Vec3f orientations[3]; // 座標軸、正規化、直交必須
-	Vec3f size; // 座標軸方向の長さの半分
-
-	// 回転軸
-	Matrix4x4 matRotate;
-	
-	void MakeOBBAxis(const Vec3f& rotate);
-	std::vector<Vec3f> MakeIndex() const ;
-};
-
 /// <summary>
 /// ワールド空間での線を引く
 /// </summary>
@@ -74,6 +30,8 @@ void DrawGrid(const Matrix4x4& viewPrijectionMatrix, const Matrix4x4& viewMatrix
 /// <param name="viewProjectionMatrix"></param>
 /// <param name="viewportMatrix"></param>
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
+
+void DrawBall(const Ball& ball, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
 
 /// <summary>
 /// 平面を引く関数

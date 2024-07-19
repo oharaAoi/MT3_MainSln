@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include "MyVector3.h"
-#include "MyMath.h"
 #include "MyMatrix4x4.h"
-#include "DrawUtils.h"
 
 struct Spring {
 	// アンカー。固定された橋の位置
@@ -19,8 +17,6 @@ struct Ball {
 	float mass;			// 質量
 	float radius;		// 半径
 	unsigned int color;	// 色
-
-	void Draw(const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix);
 };
 
 // 振り子
