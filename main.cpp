@@ -93,6 +93,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("Set");
 
 		if (ImGui::TreeNode("point")) {	
+			ImGui::DragFloat("conicalPendulum.halfApexAngle", &conicalPendulum.halfApexAngle, 0.01f, 0, 2);
 			ImGui::TreePop();
 		}
 
