@@ -218,3 +218,7 @@ Vec3f Bezier(const std::vector<Vec3f>& controlPoint, const float& t) {
 
 	return Bezier(lerpVec, t);
 }
+
+Vec3f Reflect(const Vec3f& input, const Vec3f& normal) {
+	return input - (normal * (2.0f * Dot(input, normal)));
+}
