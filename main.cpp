@@ -85,20 +85,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// ------------------------ 反射させる ------------------------ //
 
-		/*if (IsCollision(Sphere(ball.pos, ball.radius), plane)) {
-			Vec3f reflected = Reflect(ball.velocity, plane.normal);
-			Vec3f projectToNormal = Project(reflected, plane.normal);
-			Vec3f movingDire = reflected - projectToNormal;
-			ball.velocity = projectToNormal * e + movingDire;
-		}*/
-
 		if (IsCollisionCapsule(ball, plane)) {
 			ball.pos = BackBall(ball, plane);
 			Vec3f reflected = Reflect(ball.velocity, plane.normal);
 			Vec3f projectToNormal = Project(reflected, plane.normal);
 			Vec3f movingDire = reflected - projectToNormal;
 			ball.velocity = projectToNormal * e + movingDire;
-			ball.pos += ball.velocity * deltaTime;
 		}
 
 		// 画面外に消えたら
@@ -124,7 +116,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawPlane(plane, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix(), WHITE);
 
 		DrawBall(ball, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
-		DrawBall(nextBall, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
+		//DrawBall(nextBall, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 
 		Novice::DrawLine(
 			static_cast<int>(ball.pos.x),

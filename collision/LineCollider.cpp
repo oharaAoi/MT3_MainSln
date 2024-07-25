@@ -77,10 +77,8 @@ bool IsCollision(const Line& line, const Plane& plane) {
 	// tを求める
 	float t = (plane.distance - Dot(line.origin, plane.normal)) / dot;
 
-	//Vec3f collisionPoint = line.origin + (line.diff * t);
-
-	// 衝突判定を取る(tが0以上1以下だったら)
-	if (0 <= t && t <= 1) {
+	// 衝突判定を取る(画面に影響しない範囲)
+	if (-5 <= t && t <= 5) {
 		return true;
 	}
 

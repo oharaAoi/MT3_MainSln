@@ -40,7 +40,7 @@ bool IsCollisionCapsule(const Ball& ball, const Plane& p1) {
 	Capsule capsule = CreateCapsule(ball);
 
 	// カプセルの始点と平面の内積をとる
-	float dot1 = Dot(capsule.segment.origin, p1.normal);
+	float dot1 = Dot(p1.normal, capsule.segment.origin);
 	// 終点
 	float dot2 = Dot(capsule.segment.origin + capsule.segment.diff, p1.normal);
 
@@ -48,21 +48,21 @@ bool IsCollisionCapsule(const Ball& ball, const Plane& p1) {
 
 	Line ballLine{};
 	ballLine.origin = capsule.segment.origin;
-	ballLine.origin = capsule.segment.diff;
+	ballLine.diff = p1.normal;
 
 	// 線分が平面を貫通しているか
 	if (!IsCollision(ballLine, p1)) {
-		if (distance > ball.radius) {
-			return false;
-		}
+		return false;
 	}
-	
+
+	// 次フレームで平面の下に行っているかの判定
 	if (dot1 > 0.0f && dot2 < 0.0f) {
 		return true;
 	} else if (dot1 < 0.0f && dot2 > 0.0f) {
 		return true;
 	}
 
+	// 距離でも判定を取って置く
 	if (distance <= ball.radius) {
 		return true;
 	}
