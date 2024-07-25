@@ -53,6 +53,10 @@ struct Capsule {
 struct Plane {
 	Vec3f normal;	// 法線
 	float distance;	// 距離
+
+	Vec3f vertices[4];
+
+	void SetVertex();
 };
 
 /// <summary>
@@ -152,6 +156,14 @@ float Length(const Vec3f& vec3);
 /// <param name="vec3"></param>
 /// <returns></returns>
 Vec3f Normalize(const Vec3f& vec3);
+
+/// <summary>
+/// 距離を求める
+/// </summary>
+/// <param name="v1">点1</param>
+/// <param name="v2">点2</param>
+/// <returns>距離</returns>
+float Distance(const Vec3f& v1, const Vec3f& v2);
 
 //=================================================================================================================
 //	↓	ベクトルに関する関数

@@ -122,6 +122,10 @@ Vec3f Normalize(const Vec3f& vec3){
     return result;
 }
 
+float Distance(const Vec3f& v1, const Vec3f& v2) {
+	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+}
+
 //void Normalize(Vec3f& v) {
 //	float len = Length(v);
 //	if (len != 0) {
@@ -234,3 +238,22 @@ Capsule CreateCapsule(const Ball& ball) {
 	return capsule;
 }
 
+void Plane::SetVertex() {
+	// 中心点を決める
+	Vec3f center = normal * distance;
+	Vec3f perpendiculars[4];
+	// 法線と垂直なベクトルを求める
+	perpendiculars[0] = Normalize(Perpendicular(normal));
+	// 上の逆ベクトルを求める
+	perpendiculars[1] = { -perpendiculars[0].x, -perpendiculars[0].y, -perpendiculars[0].z };
+	// 垂直なベクトルと法線のクロス積を求める
+	perpendiculars[2] = Cross(normal, perpendiculars[0]);
+	// 上の逆ベクトルを求める
+	perpendiculars[3] = { -perpendiculars[2].x, -perpendiculars[2].y, -perpendiculars[2].z };
+	// 4つのベクトルを中心点にそれぞれ定数倍して足す
+	for (int32_t index = 0; index < 4; ++index) {
+		Vec3f extend = perpendiculars[index] * 2.0f;
+		Vec3f point = center + extend;
+		vertices[index] = point;
+	}
+}

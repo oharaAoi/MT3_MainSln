@@ -21,8 +21,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Novice::Initialize(kWindowTitle, windowX, windowY);
 
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	std::unique_ptr<Camera> camera_ = std::make_unique<Camera>();
 
@@ -54,6 +54,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Plane plane{};
 	plane.normal = Normalize({ -0.2f, 1.2f, -0.3f });
 	plane.distance = 0.0f;
+
+	plane.SetVertex();
 
 	float deltaTime = 1.0f / 60.0f;
 	float e = 0.2f;
@@ -96,6 +98,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			Vec3f projectToNormal = Project(reflected, plane.normal);
 			Vec3f movingDire = reflected - projectToNormal;
 			ball.velocity = projectToNormal * e + movingDire;
+			ball.pos += ball.velocity * deltaTime;
 		}
 
 		// 画面外に消えたら
@@ -122,22 +125,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawBall(ball, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
 		DrawBall(nextBall, camera_->GetViewProjectMatrix(), camera_->GetViewportMatrix());
-		
+
+		Novice::DrawLine(
+			static_cast<int>(ball.pos.x),
+			static_cast<int>(ball.pos.y),
+			static_cast<int>(nextBall.pos.x),
+			static_cast<int>(nextBall.pos.y),
+			BLACK
+		);
+
 		ImGui::Begin("Set");
 
-		if (ImGui::TreeNode("point")) {	
-			if (ImGui::Button("Reset")) {
-				ball.pos = startPos;
-				ball.acceleration = { 0.0f, -9.8f, 0.0f };
-				ball.velocity = { 0.0f, 0.0f, 0.0f };
-			}
-
-			ImGui::DragFloat3("startPos", &startPos.x, 0.1f);
-
-			ImGui::DragFloat("coefficient", &e, 0.01f, 0.0f, 1.0f);
-			ImGui::TreePop();
+		if (ImGui::Button("Reset")) {
+			ball.pos = startPos;
+			ball.acceleration = { 0.0f, -9.8f, 0.0f };
+			ball.velocity = { 0.0f, 0.0f, 0.0f };
 		}
 
+		ImGui::DragFloat3("startPos", &startPos.x, 0.1f);
+
+		ImGui::DragFloat("coefficient", &e, 0.01f, 0.0f, 1.0f);
+		
+		if (ImGui::TreeNode("plane")) {
+			ImGui::DragFloat3("plane.normal", &plane.normal.x, 0.1f);
+			ImGui::TreePop();
+		}
 		ImGui::End();
 
 

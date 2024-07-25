@@ -239,6 +239,13 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjection, const Matrix
 		static_cast<int>(points[0].x),
 		static_cast<int>(points[0].y),
 		0x0000ffff);
+
+	Novice::DrawLine(
+		static_cast<int>(points[2].x),
+		static_cast<int>(points[2].y),
+		static_cast<int>(points[3].x),
+		static_cast<int>(points[3].y),
+		0xF0E68Cff);
 }
 
 void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjection, const Matrix4x4& viewportMatrix, const uint32_t& color, const bool& isWier) {

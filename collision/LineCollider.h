@@ -26,3 +26,7 @@ bool IsCollision(const Line& line, const Plane& plane);
 /// <param name="plane">平面</param>///
 ///  <returns>true: 当たっている false: 当たっていない</returns>
 bool IsCollision(const Ray& ray, const Plane& plane);
+
+bool IsCollision(const Triangle& triangle, const Segment& segment);
+bool IsCollision(const Triangle& triangle, const Ray& ray);
+bool IsCollision(const Triangle& triangle, const Line& line);
